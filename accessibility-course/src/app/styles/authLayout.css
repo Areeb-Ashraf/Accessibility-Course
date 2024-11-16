@@ -20,6 +20,7 @@
     font-weight: 900;
     line-height: 62.5px;
     color: #F5EBE0;
+    margin: 10px;
 }
 
 .auth-imgName{
@@ -33,6 +34,7 @@
     display: flex;
     flex-direction: row;
     gap: 20px;
+    margin-bottom: 20px;
 }
 
 .auth-img-btn{
@@ -72,8 +74,35 @@
     border-radius: 10px;
 }
 
+.auth-layout-right{
+    width: 50%;
+    background-color: #F5EBE0;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-logo{
+    color: #C16102;
+    font-size: 35px;
+    font-weight: 800;
+    line-height: 56.25px;
+    margin: 50px 0px 50px 50px ; 
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.blend{
+    mix-blend-mode: luminosity;
+}
 /* responsiveness */
 
-/* @media screen and (min-width: 768px) {
+@media screen and (max-width: 700px) {
+    .auth-layout-container{
+        flex-direction: column;
+    }
 
-} */
+    .auth-layout-left, .auth-layout-right{
+        width: 100%;
+    }
+}

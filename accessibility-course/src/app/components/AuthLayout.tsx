@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import '../styles/authLayout.css'
 import Image from "next/image";
-// how to import:
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -50,7 +49,20 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
                     <div className="auth-img-btn" onClick={nextImg}>&gt;</div>
                 </div>
             </div>
-            <div className="auth-layout-right">{children}</div>
+            <div className="auth-layout-right">
+                <div className="auth-logo">
+                <Image
+                    aria-hidden
+                    src="/logo.svg"
+                    alt="Logo"
+                    width={42}
+                    height={42}
+                    className='blend'
+                />
+                    Acessibility
+                </div>
+                {children}
+            </div>
         </div>
     </>
   )

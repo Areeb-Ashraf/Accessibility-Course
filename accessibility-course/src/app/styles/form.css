@@ -1,0 +1,97 @@
+.form-container{
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+}
+
+.form-title{
+    color: #C16102;
+    font-size: 25px;
+    font-weight: 800;
+    line-height: 43.75px;
+}
+
+.form-form{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    width: 70%;
+    gap: 30px;
+}
+
+.form-label{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 25px;
+}
+
+.form-input{
+    height: 42px;
+    border-radius: 10px;
+    border: 3px solid #C16102;
+    text-indent: 15px;
+    background-color: #F5EBE0;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.form-submit{
+    width: 150px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #C16102;
+    border: 3px solid #C16102;
+    color: #F5EBE0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 25px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.form-link-text{
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 25px;
+    margin-bottom: 20px;
+}
+
+.form-link-text a{
+    color: #C16102;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.passwords-container{
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+@media screen and (max-width: 855px) {
+    .form-form{
+        gap: 10px;
+    }
+    .passwords-container{
+        flex-direction: column;
+        gap: 10px;
+    }
+    .form-link-text, .form-submit{
+        margin-top: 0px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .form-form, .passwords-container{
+        gap: 30px;
+    }
+    .form-link-text, .form-submit{
+        margin-top: 20px;
+    }
+}
