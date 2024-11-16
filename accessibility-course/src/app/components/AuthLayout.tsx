@@ -59,7 +59,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
                     height={42}
                     className='blend'
                 />
-                    Acessibility
+                    Accessibility
                 </div>
                 {children}
             </div>
