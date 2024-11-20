@@ -6,7 +6,7 @@ import { LoginSchema, loginSchema } from "@/lib/schemas/LoginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInUser } from "../actions/authAction";
 import { useRouter } from "next/navigation";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function LoginForm() {
     const { register, handleSubmit, formState: {isValid, errors} } = useForm<LoginSchema>( {
@@ -18,10 +18,10 @@ export default function LoginForm() {
         const result = await signInUser(data);
         console.log("result::: ", result);
         if (result.status === "success") {
-          router.push("/members");
+          router.push("/dashboard");
           // router.refresh();
         } else {
-          console.error(result.error as string);
+          toast.error(result.error as string);
         }
       };
   return (

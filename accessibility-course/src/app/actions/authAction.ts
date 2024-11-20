@@ -32,7 +32,7 @@ export async function signInUser(data: LoginSchema): Promise<ActionResult<string
 }
 
 export async function signOutUser() {
-    await signOut({ redirectTo: '/' });
+    await signOut({ redirectTo: '/login' });
 }
 
 export async function registerUser(data: RegisterSchema): Promise<ActionResult<User>> {

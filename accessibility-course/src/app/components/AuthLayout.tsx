@@ -2,6 +2,8 @@
 import React, { useState } from 'react'
 import '../styles/authLayout.css'
 import Image from "next/image";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -61,6 +63,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
                 />
                     Accessibility
                 </div>
+                <ToastContainer />
                 {children}
             </div>
         </div>

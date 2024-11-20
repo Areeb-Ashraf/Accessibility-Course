@@ -8,7 +8,7 @@ import { registerUser } from "../actions/authAction";
 
 export default function SignupForm() {
     const { register, handleSubmit, setError, formState: {isValid, errors} } = useForm<RegisterSchema>( {
-        // resolver: zodResolver(registerSchema),
+        resolver: zodResolver(registerSchema),
         mode: "onTouched",
       });
       const onSubmit = async (
