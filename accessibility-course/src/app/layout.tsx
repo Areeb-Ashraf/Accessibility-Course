@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import NavbarWrapper from "./components/navwrapper";
 
 //👇 Import Lexend
 import { Lexend } from 'next/font/google';
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={lexend.style}>
-        {children}
+        <NavbarWrapper>
+            {children}
+        </NavbarWrapper>
       </body>
     </html>
   );
