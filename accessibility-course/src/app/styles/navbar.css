@@ -1,6 +1,6 @@
 .navbar-container{
     width: 100%;
-    padding: 1rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
     background-color: #fff;
     display: flex;
     flex-direction: row;
@@ -59,4 +59,10 @@
     display: flex;
     margin-left: auto;
     cursor: pointer;
+}
+
+@media screen and (max-width: 1050px){
+    .navbar-links-container{
+        display: none;
+    }
 }
