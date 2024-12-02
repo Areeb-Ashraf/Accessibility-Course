@@ -1,20 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
+import { auth, signOut } from '@/auth';
+import { signOutUser } from '../actions/authAction';
 import '../styles/navbar.css';
 
 export default function Navbar() {
     const pathname = usePathname();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
-    const toggleSidebar = () => {
-        setSidebarOpen(!sidebarOpen);
-    };
+    const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+    const closeSidebar = () => setSidebarOpen(false);
 
-    const closeSidebar = () => {
-        setSidebarOpen(false);
-    };
+    const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+    const closeDropdown = () => setDropdownOpen(false);
+
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleOutsideClick = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleOutsideClick);
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, []);
 
     return (
         <>
@@ -86,7 +102,7 @@ export default function Navbar() {
                     </Link>
                 </div>
 
-                <div className="navbar-profile">
+                <div className="navbar-profile" onClick={toggleDropdown} ref={dropdownRef}>
                     <Image
                         aria-hidden
                         src="/default-pfp-18.jpg"
@@ -94,6 +110,20 @@ export default function Navbar() {
                         width={35}
                         height={35}
                     />
+                    {dropdownOpen && (
+                        <div className="profile-dropdown">
+                            <Link href="/settings" className="dropdown-item">
+                                Settings
+                            </Link>
+                            <button 
+                                type="button" 
+                                className="logout-button" 
+                                onClick={signOutUser}
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    )}
                 </div>
             </nav>
 
