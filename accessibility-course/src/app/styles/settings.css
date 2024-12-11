@@ -1,0 +1,93 @@
+.settings-container{
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     align-content: flex-start;
+     height: calc(100vh - 56px);
+     background-color: #F5EBE0;
+}
+
+.settings-title{
+    font-size: 35px;
+    font-weight: 900;
+    line-height: 50px;
+    text-align: left;
+    color: #C16102;
+    margin: 100px 20px 20px 0px ;
+}
+
+.settings-label{
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 25px;
+    text-align: left;  
+    color: #7F7F7F; 
+    margin-bottom: 5px;
+}
+
+.settings-picture-container{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.settings-picture{
+    height: 85px;
+    width: 85px;
+    border-radius: 50%;
+    background-color: #fff;
+    margin-right: 10px;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.change-picture, .delete-picture{
+    width: 125px;
+    height: 40px;
+    border-radius: 10px;
+    background: #C16102;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 18.75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 5px;
+    transition: 0.3s ease;
+}
+
+.change-picture:hover{
+    color: #C16102;
+    background-color: #F5EBE0;
+    border: 3px solid #C16102;
+    cursor: pointer;
+}
+
+.delete-picture{
+    color: #C16102;
+    background-color: #F5EBE0;
+    border: 3px solid #C16102
+}
+
+.delete-picture:hover{
+    background: #C16102;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.settings-box{
+    width: 350px;
+    height: 45px;
+    border-radius: 10px ;
+    border: 3px solid #A9A9A9;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 25px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    text-indent: 10px;
+    margin-bottom: 20px;
+}

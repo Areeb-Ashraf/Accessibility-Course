@@ -102,7 +102,7 @@ export default function Navbar() {
                     </Link>
                 </div>
 
-                <div className="navbar-profile" onClick={toggleDropdown} ref={dropdownRef}>
+                <div className={`navbar-profile ${pathname === '/settings' ? 'profile-active' : ''}`} onClick={toggleDropdown} ref={dropdownRef}>
                     <Image
                         aria-hidden
                         src="/default-pfp-18.jpg"
