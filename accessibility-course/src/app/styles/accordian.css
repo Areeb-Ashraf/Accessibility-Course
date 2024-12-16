@@ -25,12 +25,12 @@
   margin-top: 15px;
 }
 
-.active,
+.accordian-active,
 .accordion:hover {
     background-color: #c161026e;
 }
 
-.accordion.active {
+.accordion.accordian-active {
     border-radius: 20px 20px 0px 0px;
   }
 
@@ -43,7 +43,7 @@
   margin-left: 5px;
 }
 
-.active::after {
+.accordian-active::after {
   content: "\2212"; /* Minus symbol */
 }
 
@@ -67,4 +67,4 @@
     line-height: 20px;
     text-align: left;
     margin: 20px;
-  }
+  }background: #BE814438;

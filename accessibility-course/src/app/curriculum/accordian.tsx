@@ -20,7 +20,7 @@ const Accordion: React.FC = () => {
       {['Section title 1.1.1', 'Section title 1.1.2', 'Section title 1.1.3'].map((section, index) => (
         <div className='accordion--inner-container' key={index}>
           <button
-            className={`accordion ${activePanels.includes(index) ? 'active' : ''}`}
+            className={`accordion ${activePanels.includes(index) ? 'accordian-active' : ''}`}
             onClick={() => toggleAccordion(index)}
           >
             {section}
