@@ -1,0 +1,70 @@
+.accordion-container {
+  height: calc(100vh - 56px);
+  background-color: #f5ebe0;
+}
+
+.accordion--inner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.accordion {
+  background-color: #be814438;
+  cursor: pointer;
+  padding: 15px;
+  width: 98%;
+  border: 2px solid #c16102;
+  border-radius: 20px;
+  outline: none;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28.75px;
+  text-align: left;
+  /* transition: 0.4s; */
+  margin-top: 15px;
+}
+
+.active,
+.accordion:hover {
+    background-color: #c161026e;
+}
+
+.accordion.active {
+    border-radius: 20px 20px 0px 0px;
+  }
+
+.accordion::after {
+  content: "\002B"; /* Plus symbol */
+  color: #c16102;
+  font-weight: bold;
+  font-size: 25px;
+  float: right;
+  margin-left: 5px;
+}
+
+.active::after {
+  content: "\2212"; /* Minus symbol */
+}
+
+.panel {
+  width: 98%;
+  background-color: #f5ebe0;
+  max-height: 0;
+  overflow: hidden;
+  /* transition: max-height 0.2s ease-out; */
+}
+
+/* Add visible border and rounded corners when panel is expanded */
+.panel-active {
+    border: 2px solid #c16102;
+    border-radius: 0px 0px 20px 20px;
+  }
+
+  .panel-text{
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: left;
+    margin: 20px;
+  }
