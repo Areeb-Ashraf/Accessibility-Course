@@ -117,3 +117,8 @@
 .Csidevbar-Accordian-subitem:hover{
     border-left: 6px solid #C16102;
 }
+
+.Csidevbar-Accordian-subitem.subItem-active {
+    border-left: 6px solid #C16102; /* Same as hover */
+    background-color: #f5f5f5; /* Optional for a visual distinction */
+}

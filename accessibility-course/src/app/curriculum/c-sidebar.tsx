@@ -15,6 +15,15 @@ const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick }) => {
     const toggleAccordion = (index) => {
       setOpenAccordion(openAccordion === index ? null : index); // Toggle open/close for the clicked accordion
     };
+
+    const [activeSubItem, setActiveSubItem] = useState<string | null>(     // Track active sub-item
+        curriculumData.sections[0].subItems[0].subTitle // Default to "1.1 Title"
+    );
+
+    const handleSubItemClick = (subItem) => {
+    setActiveSubItem(subItem.subTitle); // Set active sub-item
+    onSubItemClick(subItem); // Pass the clicked sub-item to the parent
+    };
   
     const accordionsData = curriculumData.sections;
     return(
@@ -68,9 +77,11 @@ const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick }) => {
                             <div className="Csidevbar-Accordian-subitem-container">
                             {accordion.subItems.map((subItem, subIndex) => (
                                 <div
-                                className="Csidevbar-Accordian-subitem"
+                                className={`Csidevbar-Accordian-subitem ${
+                                    activeSubItem === subItem.subTitle ? 'subItem-active' : ''
+                                }`}
                                 key={subIndex}
-                                onClick={() => onSubItemClick(subItem)} // Pass clicked sub-item
+                                onClick={() => handleSubItemClick(subItem)} 
                                 >
                                 <div className="Csidevbar-Accordian-subitem-status">
                                     <Image
