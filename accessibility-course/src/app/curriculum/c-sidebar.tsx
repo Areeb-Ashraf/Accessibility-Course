@@ -2,23 +2,21 @@
 import React, { useState } from 'react'
 import '../styles/csidebar.css'
 import Image from "next/image";
+import curriculumData from './curriculumData.json';
 
 interface CsidebarProps {
     children: React.ReactNode;
+    onSubItemClick: (subItem: { subTitle: string; subSections: { title: string; content: string }[] }) => void; // Add a callback prop
 }
 
-const Csidebar: React.FC<CsidebarProps> = ({ children }) => {
+const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick }) => {
     const [openAccordion, setOpenAccordion] = useState(null); // Track the open accordion by index
 
     const toggleAccordion = (index) => {
       setOpenAccordion(openAccordion === index ? null : index); // Toggle open/close for the clicked accordion
     };
   
-    const accordionsData = [
-      { title: "1. Title", subItems: ["1.1 title", "1.2 title"] },
-      { title: "2. Title", subItems: ["2.1 title", "2.2 title"] },
-      { title: "3. Title", subItems: ["3.1 title", "3.2 title"] },
-    ];
+    const accordionsData = curriculumData.sections;
     return(
         <>
             <div className="curriculum-container">
@@ -72,6 +70,7 @@ const Csidebar: React.FC<CsidebarProps> = ({ children }) => {
                                 <div
                                 className="Csidevbar-Accordian-subitem"
                                 key={subIndex}
+                                onClick={() => onSubItemClick(subItem)} // Pass clicked sub-item
                                 >
                                 <div className="Csidevbar-Accordian-subitem-status">
                                     <Image
@@ -82,7 +81,7 @@ const Csidebar: React.FC<CsidebarProps> = ({ children }) => {
                                         height={16}
                                     />
                                 </div>
-                                {subItem}
+                                {subItem.subTitle}
                                 </div>
                             ))}
                             </div>

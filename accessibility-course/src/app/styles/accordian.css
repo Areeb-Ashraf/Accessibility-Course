@@ -1,6 +1,7 @@
 .accordion-container {
   height: calc(100vh - 56px);
   background-color: #f5ebe0;
+  width: 100%;
 }
 
 .accordion--inner-container {

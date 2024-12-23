@@ -2,28 +2,39 @@
 import React, { useState } from 'react';
 import '../styles/accordian.css';
 
-const Accordion: React.FC = () => {
-  const [activePanels, setActivePanels] = useState<number[]>([]); // Track multiple active panels
+interface AccordionProps {
+  subItem: {
+    subSections: {
+      title: string;
+      content: string;
+    }[];
+  };
+}
+
+const Accordion: React.FC<AccordionProps> = ({ subItem }) => {
+  const [activePanels, setActivePanels] = useState<number[]>([]);
 
   const toggleAccordion = (index: number) => {
-    if (activePanels.includes(index)) {
-      // If the panel is already active, remove it from the active list
-      setActivePanels(activePanels.filter((i) => i !== index));
-    } else {
-      // Otherwise, add it to the active list
-      setActivePanels([...activePanels, index]);
-    }
+      if (activePanels.includes(index)) {
+          setActivePanels(activePanels.filter((i) => i !== index));
+      } else {
+          setActivePanels([...activePanels, index]);
+      }
   };
+
+  // Generate sections based on the selected sub-item
+  // const sections = Array.from({ length: 3 }, (_, i) => `${subItem.slice(0, 3)}.${i + 1} Section title `);
+  // const sections = subItem.subSections.map((section) => section.title);
 
   return (
     <div className="accordion-container">
-      {['Section title 1.1.1', 'Section title 1.1.2', 'Section title 1.1.3'].map((section, index) => (
+      {subItem.subSections.map((section, index) => (
         <div className='accordion--inner-container' key={index}>
           <button
             className={`accordion ${activePanels.includes(index) ? 'accordian-active' : ''}`}
             onClick={() => toggleAccordion(index)}
           >
-            {section}
+            {section.title}
           </button>
           <div
             className={`panel ${activePanels.includes(index) ? 'panel-active' : ''}`}
@@ -32,9 +43,7 @@ const Accordion: React.FC = () => {
             }}
           >
             <div className='panel-text'>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              {section.content} {/* Render content dynamically */}
             </div>
           </div>
         </div>
