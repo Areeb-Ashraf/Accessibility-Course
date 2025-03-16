@@ -1,5 +1,5 @@
 .accordion-container {
-  height: calc(100vh - 56px);
+  min-height: calc(100vh - 56px);
   background-color: #f5ebe0;
   width: 100%;
 }
@@ -53,25 +53,27 @@
   background-color: #f5ebe0;
   max-height: 0;
   overflow: hidden;
-  /* transition: max-height 0.2s ease-out; */
+  transition: max-height 0.3s ease-out;
 }
 
 /* Add visible border and rounded corners when panel is expanded */
 .panel-active {
     border: 2px solid #c16102;
     border-radius: 0px 0px 20px 20px;
-  }
+    border-top: none;
+    max-height: 2000px; /* Large enough value to accommodate content */
+}
 
-  .panel-text{
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 20px;
-    text-align: left;
-    margin: 20px;
-  }
+.panel-text{
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+  margin: 20px;
+}
 
-  @media (max-width: 768px) {
-    .accordion-container {
-      padding-top: 50px;
-    }
+@media (max-width: 768px) {
+  .accordion-container {
+    padding-top: 50px;
   }
+}
