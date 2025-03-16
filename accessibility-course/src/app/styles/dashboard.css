@@ -573,3 +573,90 @@
     height: 85%;
 }
 
+
+/* responsiveness */
+
+@media screen and (max-width: 1050px){
+    .dashboard-panel-greeting h2 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    .dashboard-panel-greeting p {
+        font-size: 10px;
+    }
+
+    .progress-text {
+        font-size: 10px;
+        gap: 2px;
+        align-items: center;
+    }
+    .progress-text img{
+        width: 15px;
+        height: 15px;
+    }
+
+    .progress-lvls {
+        font-size: 5px;
+        gap: 5px;
+    }
+
+    .prev-lvl, .next-lvl {
+        font-size: 10px;
+        width: 50px;
+        height: 25px;
+        border-width: 3px;
+        margin-top: 5px;
+    }
+
+    .dashboard-panel-progress{
+        margin-right: 10px;
+    }
+
+    .todo-image-container{
+        padding: 5px 0px;
+    }
+    .todo-image-container img   {
+        width: 75%;
+        height: 80%;
+    }
+
+    .todo-text-container{
+        font-size: 11px;
+    }
+
+    .badges-container{
+        height: auto;
+    }
+    
+    .progress-circles-container{
+        padding: 10px;
+        flex-wrap: wrap;
+        height: auto;
+    }
+
+    .stats-container{
+        flex-direction: row;
+    }
+
+    .xp-container, .lvl-container{
+        width: 50%;
+        height: 110px;
+    }
+
+    .lvl-container{
+        margin-left: 0px;
+        margin-right: 20px;
+    }
+
+    .panda-container{
+        width: 360px
+    }
+    
+    .dashboard-middle{
+        gap: 30px;
+    }
+
+    .dashboard-bottom{
+        gap: 30px;
+    }
+}
