@@ -2,7 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import Navbar from "./navbar";
-import React from 'react'
+import React from 'react';
+import AuthGuard from "./AuthGuard";
 
 export default function NavbarWrapper({
     children,
@@ -13,11 +14,22 @@ export default function NavbarWrapper({
 
     // Define routes where the Navbar should not appear
     const noNavbarRoutes = ["/login", "/signup", "/"];
+    
+    // Define public routes that don't need authentication
+    const publicRoutes = ["/login", "/signup", "/"];
+    
+    const isPublicRoute = publicRoutes.includes(pathname);
 
     return (
         <>
             {!noNavbarRoutes.includes(pathname) && <Navbar />}
-            {children}
+            {isPublicRoute ? (
+                children
+            ) : (
+                <AuthGuard>
+                    {children}
+                </AuthGuard>
+            )}
         </>
     );
 }
