@@ -200,6 +200,30 @@
     background-color: #f5f5f5; /* Optional for a visual distinction */
 }
 
+/* Report Card Link styles */
+.report-card-link {
+    display: block;
+    padding: 10px 15px;
+    margin: 15px 10px;
+    text-align: center;
+    background-color: transparent;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.report-card-link:hover {
+    color: #5c493f;
+    text-decoration: underline;
+}
+
+.report-card-link-active {
+    background-color: #D5C1B5;
+    border-radius: 5px;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
     .Csidebar-container:not(.mobile) {

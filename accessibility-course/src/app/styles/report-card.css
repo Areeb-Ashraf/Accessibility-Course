@@ -1,0 +1,179 @@
+.report-card-container {
+  min-height: calc(100vh - 56px);
+  /* min-width: 100%; */
+  background-color:  #f5ebe0;
+}
+
+.report-card-header, .report-card-container-title, .report-card-legend-container{
+  display: flex;
+}
+
+.report-card-header{
+  align-items: center;
+}
+
+.report-card-container-title{
+  font-weight: 800;
+  font-size: 25px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  margin: 20px;
+}
+
+.report-card-download-text{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #C16102;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 100%;
+  letter-spacing: 0%;
+  margin-right: 20px;
+  cursor: pointer;
+  margin-right: auto;
+}
+
+.report-card-legend-container{  
+  margin-right: 20px;
+  gap: 15px; 
+}
+
+.report-card-legend-item{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.card-container{
+  margin: 20px;
+  background-color: #E3D5CA5E;
+  border-radius: 25px;
+  width: 100%;
+  /* min-width: 320px; */
+  box-shadow: 2px 2px 10px 0px #00000040;
+}
+
+.card-header{
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 100%;
+  letter-spacing: 0%;
+  padding: 18px;
+  background-color: #C16102;
+  border-radius: 25px 25px 0 0;
+  color: #fff;
+}
+
+.report-card-body{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.card-container-left, .card-container-right{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 50%;
+}
+
+.card-container-right{
+  padding-right: 30px;
+}
+
+.card-body-titles{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px 30px 15px 15px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #8B8B8B;
+  border-bottom: 1px solid #8B8B8B;
+}
+
+.card-body-title-quiz{
+  margin-right: auto;
+}
+
+.card-body-title-status{
+  margin-right:30px;
+}
+
+.card-body{
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body-item{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px 30px 15px 15px;
+  border-bottom: 1px solid #8B8B8B;
+
+}
+
+.card-body-item-quiz{
+  margin-right: auto;
+}
+
+.card-body-item-status{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 22px;
+}
+
+.card-body-item-grade{
+  margin-right: 8px;
+}
+
+.item-last{
+  border: none;
+}
+
+.not-completed{
+  margin-right: 25px;
+  margin-left: 2px
+}
+
+@media (max-width: 932px) {
+  .report-card-container-title{
+    margin-top: 60px;
+  }
+
+  .report-card-container-title, .report-card-download-text, .report-card-legend-container{
+    margin-bottom: 20px;
+  }
+
+  .report-card-download-text{
+    margin-right: 10px;
+  }
+
+  .report-card-body{
+    flex-direction: column;
+    align-items: center;
+    gap: 0px;
+  }
+
+  .card-container-left, .card-container-right{
+    min-width: 96%;
+    /* padding-left: 20px; */
+    padding-right: 20px;
+    /* margin-right: 50px; */
+  }
+
+  .report-card-header{
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+}
+

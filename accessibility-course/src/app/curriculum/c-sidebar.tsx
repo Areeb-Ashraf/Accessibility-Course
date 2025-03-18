@@ -6,10 +6,12 @@ import curriculumData from './curriculumData.json';
 
 interface CsidebarProps {
     children: React.ReactNode;
-    onSubItemClick: (subItem: { subTitle: string; subSections: { title: string; content: string }[] }) => void; // Add a callback prop
+    onSubItemClick: (subItem: { subTitle: string; subSections: { title: string; content: string }[] }) => void;
+    onReportCardClick: () => void; // Add callback for report card click
+    reportCardActive?: boolean; // Track if report card is active
 }
 
-const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick }) => {
+const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick, onReportCardClick, reportCardActive = false }) => {
     const [openAccordion, setOpenAccordion] = useState(null); // Track the open accordion by index
     const [sidebarOpen, setSidebarOpen] = useState(true); // Track if sidebar is open (default to open on desktop)
     const [isMobile, setIsMobile] = useState(false); // Track if we're on mobile view
@@ -71,6 +73,12 @@ const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick }) => {
         setActiveSubItem(subItem.subTitle); // Set active sub-item
         onSubItemClick(subItem); // Pass the clicked sub-item to the parent
         closeSidebar(); // Close sidebar on mobile after clicking a sub-item
+    };
+    
+    const handleReportCardClick = () => {
+        setActiveSubItem(null); // Clear active sub-item
+        onReportCardClick(); // Call the report card click handler
+        closeSidebar(); // Close sidebar on mobile
     };
   
     const accordionsData = curriculumData.sections;
@@ -159,7 +167,18 @@ const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick }) => {
                         )}
                         </div>
                     ))}
+                    
+                    {/* Report Card Link */}
+                    <div 
+                        className={`report-card-link ${reportCardActive ? 'report-card-link-active' : ''}`}
+                        onClick={handleReportCardClick}
+                        role="button"
+                        tabIndex={0}
+                    >
+                        View Your Report Card
+                    </div>
                 </div>
+
                 <div className={`Csidebar-content ${sidebarOpen && !isMobile ? 'with-sidebar' : 'full-width'}`}>
                     {children}
                 </div>
