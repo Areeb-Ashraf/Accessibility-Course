@@ -84,7 +84,7 @@ const Quiz: React.FC<QuizProps> = ({ subTitle }) => {
   };
   
   if (!quiz) {
-    return <div className="quiz-error">No quiz found for this section.</div>;
+    return <div className="quiz-error">No quiz for this section.</div>;
   }
   
   return (

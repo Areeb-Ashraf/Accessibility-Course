@@ -1,7 +1,7 @@
 {
     "quizzes": [
       {
-        "subTitle": "1.1 Title",
+        "subTitle": "1.1 Text Alternatives",
         "questions": [
           {
             "id": 1,
@@ -17,36 +17,36 @@
           },
           {
             "id": 2,
-            "question": "Which of the following is NOT a common accessibility barrier?",
+            "question": "What is the purpose of alt attributes for images?",
             "options": [
-              "Missing alt text for images",
-              "Keyboard navigation support",
-              "Poor color contrast",
-              "Complex navigation structures"
+              "To make images load faster",
+              "To provide a textual description of the image for screen reader users",
+              "To improve SEO rankings",
+              "To specify the image dimensions"
             ],
             "correctAnswer": 1,
             "xp": 15
           },
           {
             "id": 3,
-            "question": "What does WCAG stand for?",
+            "question": "What should be provided for video content to make it accessible to deaf users?",
             "options": [
-              "Web Content Accessibility Guidelines",
-              "World Content Access Group",
-              "Web Compliance and Accessibility Guide",
-              "Website Content Accessibility Goals"
+              "Volume controls",
+              "Captions",
+              "High-resolution video",
+              "Fast-forward capabilities"
             ],
-            "correctAnswer": 0,
+            "correctAnswer": 1,
             "xp": 20
           },
           {
             "id": 4,
-            "question": "Which assistive technology is commonly used by blind users to navigate websites?",
+            "question": "Which POUR principle addresses the need for text alternatives?",
             "options": [
-              "Screen readers",
-              "Magnifiers",
-              "Voice recognition",
-              "Switch controls"
+              "Perceivable",
+              "Operable",
+              "Understandable",
+              "Robust"
             ],
             "correctAnswer": 0,
             "xp": 10
@@ -54,7 +54,7 @@
         ]
       },
       {
-        "subTitle": "1.2 Title",
+        "subTitle": "1.2 Adaptable Content",
         "questions": [
           {
             "id": 1,
@@ -70,32 +70,44 @@
           },
           {
             "id": 2,
-            "question": "Which HTML attribute is essential for making images accessible?",
+            "question": "Why should you avoid using color alone to convey information?",
             "options": [
-              "src",
-              "alt",
-              "title",
-              "class"
+              "It increases page loading time",
+              "Users with color blindness may miss these cues",
+              "Colors are subjective and have different meanings",
+              "It makes the design less aesthetically pleasing"
             ],
             "correctAnswer": 1,
             "xp": 10
           },
           {
             "id": 3,
-            "question": "What is the purpose of ARIA landmarks?",
+            "question": "What is responsive design?",
             "options": [
-              "To add visual styling to a webpage",
-              "To help screen reader users navigate a webpage",
-              "To improve page loading speed",
-              "To track user behavior"
+              "Design that responds to user feedback",
+              "Design that adapts to different screen sizes and orientations",
+              "Design that loads quickly",
+              "Design that uses animated elements"
             ],
             "correctAnswer": 1,
             "xp": 20
+          },
+          {
+            "id": 4,
+            "question": "Why should you use relative units (em, rem) instead of fixed pixel sizes?",
+            "options": [
+              "They load faster on mobile devices",
+              "They're easier to implement",
+              "They're required by WCAG standards",
+              "They allow text to be resized without breaking the layout"
+            ],
+            "correctAnswer": 3,
+            "xp": 15
           }
         ]
       },
       {
-        "subTitle": "2.1 Title",
+        "subTitle": "2.1 Keyboard Accessibility",
         "questions": [
           {
             "id": 1,
@@ -111,50 +123,236 @@
           },
           {
             "id": 2,
-            "question": "What is the purpose of semantic HTML?",
+            "question": "What is a keyboard trap?",
             "options": [
-              "To make code more readable for developers",
-              "To improve SEO rankings",
-              "To provide meaning and structure to content for assistive technologies",
-              "To reduce file size"
+              "A feature that displays keyboard shortcuts",
+              "Software that logs keystrokes",
+              "When users can tab into an element but cannot tab away from it",
+              "A lock on physical keyboard access"
             ],
             "correctAnswer": 2,
             "xp": 20
           },
           {
             "id": 3,
-            "question": "Which of these elements is NOT a semantic HTML element?",
+            "question": "Why is a visible focus indicator important?",
             "options": [
-              "<nav>",
-              "<div>",
-              "<article>",
-              "<header>"
+              "It makes the website more visually appealing",
+              "It helps keyboard users know which element currently has focus",
+              "It is required for touch devices",
+              "It improves website performance"
             ],
             "correctAnswer": 1,
             "xp": 10
           },
           {
             "id": 4,
-            "question": "What is the recommended way to handle form validation errors for accessibility?",
+            "question": "Which POUR principle does keyboard accessibility primarily fall under?",
             "options": [
-              "Use only color to indicate errors",
-              "Provide clear error messages and focus on the error field",
-              "Reload the page when errors occur",
-              "Use popup alerts for each error"
+              "Perceivable",
+              "Operable",
+              "Understandable",
+              "Robust"
+            ],
+            "correctAnswer": 1,
+            "xp": 15
+          }
+        ]
+      },
+      {
+        "subTitle": "2.2 Sufficient Time",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Why should users be able to pause, stop, or hide moving content?",
+            "options": [
+              "To save bandwidth",
+              "To help users who have difficulty tracking moving objects",
+              "To reduce server load",
+              "To prevent copyright issues"
             ],
             "correctAnswer": 1,
             "xp": 15
           },
           {
-            "id": 5,
-            "question": "Which of these is a common screen reader?",
+            "id": 2,
+            "question": "Which users might need more time to complete tasks on a website?",
             "options": [
-              "Firefox",
-              "JAWS",
-              "Chrome",
-              "Safari"
+              "Users with high-speed internet",
+              "Users with the latest devices",
+              "Users with certain disabilities",
+              "Users from specific geographic regions"
+            ],
+            "correctAnswer": 2,
+            "xp": 10
+          }
+        ]
+      },
+      {
+        "subTitle": "3.1 Readable Content",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Why should you specify the primary language of a webpage?",
+            "options": [
+              "To rank higher in search engines",
+              "To help screen readers pronounce content correctly",
+              "To track user demographics",
+              "To comply with international law"
             ],
             "correctAnswer": 1,
+            "xp": 15
+          },
+          {
+            "id": 2,
+            "question": "What is the benefit of using clear, simple language on your website?",
+            "options": [
+              "It reduces the amount of content needed",
+              "It makes the content accessible to a wider audience including those with cognitive disabilities",
+              "It improves SEO rankings",
+              "It makes the design look more professional"
+            ],
+            "correctAnswer": 1,
+            "xp": 20
+          }
+        ]
+      },
+      {
+        "subTitle": "3.2 Predictable Behavior",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Why is consistent navigation important for accessibility?",
+            "options": [
+              "It saves development time",
+              "It makes the website visually consistent",
+              "It helps users predict where to find navigation elements",
+              "It improves page loading speed"
+            ],
+            "correctAnswer": 2,
+            "xp": 15
+          },
+          {
+            "id": 2,
+            "question": "What does predictable interaction mean?",
+            "options": [
+              "All users will interact with the site in the same way",
+              "Components with the same functionality look and behave consistently",
+              "The website can predict user behavior",
+              "Users need to learn how to use the site before visiting"
+            ],
+            "correctAnswer": 1,
+            "xp": 20
+          }
+        ]
+      },
+      {
+        "subTitle": "3.3 Input Assistance",
+        "questions": [
+          {
+            "id": 1,
+            "question": "What is the benefit of providing clear error messages?",
+            "options": [
+              "It reduces server load",
+              "Users understand what went wrong and how to fix it",
+              "It prevents users from submitting forms",
+              "It looks more professional"
+            ],
+            "correctAnswer": 1,
+            "xp": 15
+          },
+          {
+            "id": 2,
+            "question": "Why should form fields have clear labels?",
+            "options": [
+              "To make forms look organized",
+              "To help all users, including those using screen readers, understand what information is required",
+              "To collect better data",
+              "To comply with data protection laws"
+            ],
+            "correctAnswer": 1,
+            "xp": 10
+          }
+        ]
+      },
+      {
+        "subTitle": "4.1 Compatible Technologies",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Why is using valid, well-formed HTML important?",
+            "options": [
+              "It makes the code more readable",
+              "It ensures compatibility with current and future browsers and assistive technologies",
+              "It's required by law",
+              "It improves SEO only"
+            ],
+            "correctAnswer": 1,
+            "xp": 20
+          },
+          {
+            "id": 2,
+            "question": "What does 'name, role, value' refer to in accessibility?",
+            "options": [
+              "Database field types",
+              "User account attributes",
+              "Properties of interface components that can be programmatically determined",
+              "Content management systems"
+            ],
+            "correctAnswer": 2,
+            "xp": 15
+          },
+          {
+            "id": 3,
+            "question": "Why should status changes be communicated to assistive technologies?",
+            "options": [
+              "To improve website performance",
+              "To avoid disrupting the user's current focus while keeping them informed",
+              "To collect user data",
+              "It's not necessary to communicate status changes"
+            ],
+            "correctAnswer": 1,
+            "xp": 10
+          }
+        ]
+      },
+      {
+        "subTitle": "4.2 Future Compatibility",
+        "questions": [
+          {
+            "id": 1,
+            "question": "What is progressive enhancement?",
+            "options": [
+              "Gradually adding new features over time",
+              "A layered approach that provides a basic experience to all users, then enhances for more capable browsers/devices",
+              "Supporting only the latest technologies",
+              "Frequently updating content"
+            ],
+            "correctAnswer": 1,
+            "xp": 20
+          },
+          {
+            "id": 2,
+            "question": "Why should you test across different platforms and assistive technologies?",
+            "options": [
+              "To increase your website's market share",
+              "To ensure broad compatibility and accessibility",
+              "To identify the most popular devices",
+              "It's only necessary for government websites"
+            ],
+            "correctAnswer": 1,
+            "xp": 15
+          },
+          {
+            "id": 3,
+            "question": "Which POUR principle is most concerned with ensuring websites work with current and future technologies?",
+            "options": [
+              "Perceivable",
+              "Operable",
+              "Understandable",
+              "Robust"
+            ],
+            "correctAnswer": 3,
             "xp": 10
           }
         ]

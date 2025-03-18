@@ -152,7 +152,7 @@ const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick }) => {
                                         height={16}
                                     />
                                 </div>
-                                {subItem.subTitle}
+                                <div className="Csidevbar-Accordian-subitem-text">{subItem.subTitle}</div>
                                 </div>
                             ))}
                             </div>
