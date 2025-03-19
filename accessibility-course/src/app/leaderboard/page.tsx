@@ -1,79 +1,134 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../styles/leaderboard.css'
 import Image from "next/image";
+import { useSession } from 'next-auth/react';
+import { getAllUsersWithXp, getTotalUserXp } from '../actions/quizActions';
+
+interface UserWithXp {
+  id: string;
+  name: string;
+  totalXp: number;
+  rank?: number;
+}
 
 export default function Leaderboard() {
-  // Dummy data for leaderboard
-  const leaderboardData = [
-    { id: 1, name: "Emma Johnson", xp: 250 },
-    { id: 2, name: "Michael Chen", xp: 320 },
-    { id: 3, name: "Sophia Rodriguez", xp: 180 },
-    { id: 4, name: "Aiden Patel", xp: 290 },
-    { id: 5, name: "Olivia Williams", xp: 210 },
-    { id: 6, name: "Noah Thompson", xp: 175 },
-    { id: 7, name: "Isabella Garcia", xp: 160 },
-    { id: 8, name: "Liam Wilson", xp: 145 },
-    { id: 9, name: "Ava Martinez", xp: 130 },
-    { id: 10, name: "Ethan Brown", xp: 120 },
-    { id: 11, name: "Mia Davis", xp: 110 },
-    { id: 12, name: "Lucas Miller", xp: 100 }
-  ];
+  const { data: session } = useSession();
+  const [users, setUsers] = useState<UserWithXp[]>([]);
+  const [currentUserXp, setCurrentUserXp] = useState(0);
+  const [loading, setLoading] = useState(true);
   
-  // Sort by XP in descending order and add rank
-  const sortedData = [...leaderboardData]
-    .sort((a, b) => b.xp - a.xp)
-    .map((user, index) => ({
-      ...user,
-      rank: index + 1
-    }));
-  
-  // Get top 3 users
-  const topThree = sortedData.slice(0, 3);
+  // Fetch users data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch all users with XP
+        const response = await getAllUsersWithXp();
+        
+        if (response.status === 'success') {
+          // Add rank to each user
+          const usersWithRank = response.data.map((user, index) => ({
+            ...user,
+            rank: index + 1
+          }));
+          
+          setUsers(usersWithRank);
+        }
+        
+        // Fetch current user's XP if logged in
+        if (session?.user?.id) {
+          const userXpResponse = await getTotalUserXp(session.user.id);
+          if (userXpResponse.status === 'success') {
+            setCurrentUserXp(userXpResponse.data);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching leaderboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, [session?.user?.id]);
+
+  // Get top 3 users with fallback for missing positions
+  const getTopThree = (): [UserWithXp, UserWithXp, UserWithXp] => {
+    const defaultUser: UserWithXp = { id: 'na', name: 'N/A', totalXp: 0 };
+    
+    // Create array of top 3 or fill with N/A if not enough users
+    const top: UserWithXp[] = [
+      users[0] || { ...defaultUser, rank: 1 },
+      users[1] || { ...defaultUser, rank: 2 },
+      users[2] || { ...defaultUser, rank: 3 }
+    ];
+    
+    return [top[0], top[1], top[2]];
+  };
   
   // Reorder for display (2nd, 1st, 3rd)
-  const displayOrder = [
-    { user: topThree[1], className: "top-2" },
-    { user: topThree[0], className: "top-1" },
-    { user: topThree[2], className: "top-3" }
-  ];
+  const getDisplayOrder = () => {
+    const [first, second, third] = getTopThree();
+    
+    return [
+      { user: second, className: "top-2" },
+      { user: first, className: "top-1" },
+      { user: third, className: "top-3" }
+    ];
+  };
   
   // Get users ranked 4 and below for the leaderboard list
-  const remainingUsers = sortedData.slice(3);
+  const remainingUsers = users.slice(3);
 
   // Search functionality
-  const [searchTerm, setSearchTerm] = React.useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   
   // Filter users based on search term
   const filteredUsers = remainingUsers.filter(user => 
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Display loading state
+  if (loading) {
+    return (
+      <div className="leaderboard-container">
+        <div className="leaderboard-left">
+          <div className="leaderboard-left-title">
+            Leaderboard
+          </div>
+        </div>
+        <div className="leaderboard-right">
+          <div className="leaderboard-loading">Loading leaderboard data...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="leaderboard-container">
       <div className="leaderboard-left">
         <div className="leaderboard-left-title">
-            Leaderboard
+          Leaderboard
         </div>
         <div className="leaderboard-left-content">
           <div className="leaderboard-left-value-container">
             <div className="leaderboard-left-value">
               <img src="/leaderboard-xp-icon.svg" alt="XP" />
-              20
+              {currentUserXp}
             </div>
             <div className="leaderboard-left-label">
               XP Points
             </div>
           </div>
-            <div className="leaderboard-left-value-container">
-              <div className="leaderboard-left-value">
-                <img src="/leaderboard-lvl-icon.svg" alt="Level" />
-                3
-              </div>
-              <div className="leaderboard-left-label">
-                Level
-              </div>
+          <div className="leaderboard-left-value-container">
+            <div className="leaderboard-left-value">
+              <img src="/leaderboard-lvl-icon.svg" alt="Level" />
+              3
             </div>
+            <div className="leaderboard-left-label">
+              Level
+            </div>
+          </div>
         </div>
       </div>
       <div className="leaderboard-right">
@@ -81,9 +136,9 @@ export default function Leaderboard() {
           Top 3
         </div>
         <div className="top3-container">
-          {displayOrder.map(({ user, className }) => (
+          {getDisplayOrder().map(({ user, className }) => (
             <div key={user.id} className={`top3-item ${className}`}>
-              <div className="top3-item-XP">{user.xp}XP</div>
+              <div className="top3-item-XP">{user.totalXp}XP</div>
               <div className="top3-item-name">{user.name}</div>
               <div className="top3-image-container">
                 <div className="profile-image-circle">
@@ -135,21 +190,24 @@ export default function Leaderboard() {
             <img src="/search-icon.svg" alt="Search" />
             <input 
               type="text" 
-              placeholder="Search rank" 
+              placeholder="Search by name" 
               onChange={(e) => setSearchTerm(e.target.value)}
               value={searchTerm}
             />
           </div>
           <div className="leaderboard-list-inner-container">
-            {filteredUsers.map(user => (
-              <div key={user.id} className="leaderboard-list-item">
-                <div className="leaderboard-list-item-rank">{user.rank}</div>
-                <div className="leaderboard-list-item-name">{user.name}</div>
-                <div className="leaderboard-list-item-xp">{user.xp}XP</div>
-              </div>
-            ))}
-            {filteredUsers.length === 0 && (
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map(user => (
+                <div key={user.id} className="leaderboard-list-item">
+                  <div className="leaderboard-list-item-rank">{user.rank}</div>
+                  <div className="leaderboard-list-item-name">{user.name}</div>
+                  <div className="leaderboard-list-item-xp">{user.totalXp}XP</div>
+                </div>
+              ))
+            ) : searchTerm ? (
               <div className="no-results">No users found matching "{searchTerm}"</div>
+            ) : (
+              <div className="no-results">No users here yet</div>
             )}
           </div>
         </div>

@@ -51,7 +51,8 @@
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  margin-left: 20px;
+  margin-left: 10px;
+  margin-right: 50px;
 }
 
 .leaderboard-left-label {
@@ -61,7 +62,7 @@
   letter-spacing: 0%;
   color: #FFF;
   margin-top: 10px;
-  margin-left: 25px;
+  margin-left: 15px;
 }
 
 
@@ -260,12 +261,12 @@
     scrollbar-color: #C16102 #F5EBE0;
 }
 
-.no-results {
-    text-align: center;
-    padding: 20px;
-    color: #C16102;
-    font-weight: 600;
-    font-size: 16px;
+.leaderboard-loading, .no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #8B8B8B;
+  font-size: 1.1rem;
+  width: 100%;
 }
 
 @media screen and (max-width: 910px) {

@@ -97,3 +97,43 @@ export async function getTotalUserXp(userId: string): Promise<ActionResult<numbe
     return { status: 'error', error: 'Failed to get total XP' };
   }
 }
+
+export async function getAllUsersWithXp(): Promise<ActionResult<{ id: string; name: string; totalXp: number }[]>> {
+  try {
+    // First get all users
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true
+      }
+    });
+    
+    // Get all quiz results
+    const quizResults = await prisma.quizResult.findMany({
+      select: {
+        userId: true,
+        xpEarned: true
+      }
+    });
+    
+    // Calculate total XP for each user
+    const usersWithXp = users.map(user => {
+      const userResults = quizResults.filter(result => result.userId === user.id);
+      const totalXp = userResults.reduce((sum, result) => sum + result.xpEarned, 0);
+      
+      return {
+        id: user.id,
+        name: user.name || 'Unnamed User', // Fallback for users without names
+        totalXp
+      };
+    });
+    
+    // Sort by XP in descending order
+    usersWithXp.sort((a, b) => b.totalXp - a.totalXp);
+    
+    return { status: 'success', data: usersWithXp };
+  } catch (error) {
+    console.error("Failed to get users with XP:", error);
+    return { status: 'error', error: 'Failed to get users with XP' };
+  }
+}
