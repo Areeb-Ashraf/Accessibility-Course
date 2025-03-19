@@ -33,4 +33,17 @@ model User {
   image         String?
   emailVerified DateTime?
   accounts      Account[]
+  quizResults   QuizResult[]
+}
+
+model QuizResult {
+  id        String  @id @default(cuid())
+  userId    String
+  quizId    String  // This will store the quiz identifier (e.g., "1.1")
+  score     Float   // Store as percentage (0-100)
+  xpEarned  Int
+  completedAt DateTime @default(now())
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, quizId])
 }

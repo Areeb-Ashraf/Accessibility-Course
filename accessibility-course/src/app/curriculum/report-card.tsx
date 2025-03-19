@@ -1,194 +1,225 @@
 "use client"
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/report-card.css';
+import { useSession } from 'next-auth/react';
+import { getUserQuizResults, getTotalUserXp } from '../actions/quizActions';
+import curriculumData from './curriculumData.json';
+
+// Define types based on the data structures
+interface QuizResult {
+  userId: string;
+  quizId: string;
+  score: number;
+  xpEarned: number;
+  completedAt: string;
+}
+
+interface FormattedQuiz {
+  id: string;
+  title: string;
+  completed: boolean;
+  grade: number | null;
+  xp: number;
+}
+
+interface FormattedSection {
+  id: string;
+  title: string;
+  quizzes: FormattedQuiz[];
+}
+
+// Define curriculumData structure for better type safety
+interface CurriculumSection {
+  title: string;
+  subItems: {
+    subTitle: string;
+    subSections: {
+      title: string;
+      content: string;
+    }[];
+  }[];
+}
+
+interface CurriculumData {
+  mainTitle: string;
+  sections: CurriculumSection[];
+}
 
 const ReportCard = () => {
-  // Hard-coded sample data for development
-  const sampleReportData = [
-    {
-      id: "1",
-      title: "1. Perceivable",
-      quizzes: [
-        {
-          id: "1.1",
-          title: "1.1 Text Alternatives",
-          completed: true,
-          grade: 85
-        },
-        {
-          id: "1.2",
-          title: "1.2 Adaptable Content",
-          completed: true,
-          grade: 92
+  const { data: session } = useSession();
+  const [quizResults, setQuizResults] = useState<QuizResult[]>([]);
+  const [totalXp, setTotalXp] = useState(0);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      if (session?.user?.id) {
+        try {
+          const resultsResponse = await getUserQuizResults(session.user.id);
+          const xpResponse = await getTotalUserXp(session.user.id);
+          
+          if (resultsResponse.status === 'success' && xpResponse.status === 'success') {
+            setQuizResults(resultsResponse.data as QuizResult[]);
+            setTotalXp(xpResponse.data as number);
+          }
+        } catch (error) {
+          console.error("Failed to fetch quiz data:", error);
+        } finally {
+          setLoading(false);
         }
-      ]
-    },
-    {
-      id: "2",
-      title: "2. Operable",
-      quizzes: [
-        {
-          id: "2.1",
-          title: "2.1 Keyboard Accessibility",
-          completed: true,
-          grade: 78
-        },
-        {
-          id: "2.2",
-          title: "2.2 Sufficient Time",
-          completed: false,
-          grade: null
-        },
-        {
-          id: "2.3",
-          title: "2.3 Seizures and Physical Reactions",
-          completed: true,
-          grade: 90
-        }
-      ]
-    },
-    {
-      id: "3",
-      title: "3. Understandable",
-      quizzes: [
-        {
-          id: "3.1",
-          title: "3.1 Readable Content",
-          completed: true,
-          grade: 88
-        },
-        {
-          id: "3.2",
-          title: "3.2 Predictable Behavior",
-          completed: false,
-          grade: null
-        },
-        {
-          id: "3.3",
-          title: "3.3 Input Assistance",
-          completed: true,
-          grade: 95
-        }
-      ]
-    },
-    {
-      id: "4",
-      title: "4. Robust",
-      quizzes: [
-        {
-          id: "4.1",
-          title: "4.1 Compatible Technologies",
-          completed: true,
-          grade: 82
-        },
-        {
-          id: "4.2",
-          title: "4.2 Future Compatibility",
-          completed: false,
-          grade: null
-        }
-      ]
-    }
-  ];
+      } else {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, [session?.user?.id]);
+  
+  // If not logged in or loading, show appropriate message
+  if (!session) {
+    return (
+      <div className="report-card-container">
+        <div className="report-card-header">
+          <div className="report-card-container-title">Report Card</div>
+          <p>Please log in to view your progress</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (loading) {
+    return (
+      <div className="report-card-container">
+        <div className="report-card-header">
+          <div className="report-card-container-title">Report Card</div>
+          <p>Loading your progress...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Format data to match the curriculum structure
+  const typedCurriculumData = curriculumData as CurriculumData;
+  
+  const formattedReportData: FormattedSection[] = typedCurriculumData.sections.map(section => {
+    // Extract section number from title (e.g., "1. Perceivable" => "1")
+    const sectionId = section.title.split('.')[0];
+    
+    return {
+      id: sectionId,
+      title: section.title,
+      quizzes: section.subItems.map(subItem => {
+        const result = quizResults.find(r => r.quizId === subItem.subTitle);
+        return {
+          id: subItem.subTitle,
+          title: subItem.subTitle,
+          completed: !!result,
+          grade: result ? Math.round(result.score) : null,
+          xp: result ? result.xpEarned : 0
+        };
+      })
+    };
+  });
 
   // Separate data for left and right containers
-  const leftContainerData = sampleReportData.slice(0, 2); // 1. Perceivable, 2. Operable
-  const rightContainerData = sampleReportData.slice(2, 4); // 3. Understandable, 4. Robust
+  const leftContainerData = formattedReportData.slice(0, Math.ceil(formattedReportData.length / 2));
+  const rightContainerData = formattedReportData.slice(Math.ceil(formattedReportData.length / 2));
 
   return (
     <div className="report-card-container">
-        <div className="report-card-header">
-            <div className="report-card-container-title">Report Card</div>      
-            <div className="report-card-download-text"> 
-                <img src="/download-icon.svg" alt="download-icon" />
-                Download report</div>          
-            <div className="report-card-legend-container">
-                <div className="report-card-legend-item">
-                    <img src="/completed.svg" alt="completed-icon" />
-                    Completed
-                </div>
-                <div className="report-card-legend-item">
-                    <img src="/not-started.svg" alt="not-started-icon" />
-                    Not Started
-                </div>
-            </div>
+      <div className="report-card-header">
+        <div className="report-card-container-title">Report Card</div>      
+        <div className="report-card-download-text"> 
+          <img src="/download-icon.svg" alt="download-icon" />
+          Download report
+        </div>          
+        <div className="report-card-legend-container">
+          <div className="report-card-legend-item">
+            <img src="/completed.svg" alt="completed-icon" />
+            Completed
+          </div>
+          <div className="report-card-legend-item">
+            <img src="/not-started.svg" alt="not-started-icon" />
+            Not Started
+          </div>
         </div>
-        <div className="report-card-body">
-            <div className="card-container-left">
-                {leftContainerData.map(section => (
-                    <div key={section.id} className="card-container">
-                        <div className="card-header">{section.title}</div>
-                        <div className="card-body">
-                            <div className="card-body-titles">
-                                <div className="card-body-title card-body-title-quiz">Quiz</div>
-                                <div className="card-body-title card-body-title-status">Status</div>
-                                <div className="card-body-title">Grade</div>
-                            </div>
-                            {section.quizzes.map((quiz, index) => (
-                                <div key={quiz.id} className={`card-body-item ${index === section.quizzes.length - 1 ? 'item-last' : ''}`}>
-                                    <div className="card-body-item-quiz">
-                                        {quiz.id} Quiz
-                                    </div>
-                                    <div className="card-body-item-status">
-                                        {quiz.completed ? (
-                                            <>
-                                                <img src="/completed.svg" alt="completed-icon" />
-                                                Completed
-                                            </>
-                                        ) : (
-                                            <>
-                                                <img src="/not-started.svg" alt="not-started-icon" />
-                                                Not Started
-                                            </>
-                                        )}
-                                    </div>
-                                    <div className={`card-body-item-grade ${quiz.grade == null ? "not-completed": ""}`}>
-                                        {quiz.grade !== null ? `${quiz.grade}%` : '-'}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+      </div>
+      <div className="report-card-body">
+        <div className="card-container-left">
+          {leftContainerData.map(section => (
+            <div key={section.id} className="card-container">
+              <div className="card-header">{section.title}</div>
+              <div className="card-body">
+                <div className="card-body-titles">
+                  <div className="card-body-title card-body-title-quiz">Quiz</div>
+                  <div className="card-body-title card-body-title-status">Status</div>
+                  <div className="card-body-title">Grade</div>
+                </div>
+                {section.quizzes.map((quiz, index) => (
+                  <div key={quiz.id} className={`card-body-item ${index === section.quizzes.length - 1 ? 'item-last' : ''}`}>
+                    <div className="card-body-item-quiz">
+                      {quiz.id} Quiz
                     </div>
-                ))}
-            </div>
-            <div className="card-container-right">
-                {rightContainerData.map(section => (
-                    <div key={section.id} className="card-container">
-                        <div className="card-header">{section.title}</div>
-                        <div className="card-body">
-                            <div className="card-body-titles">
-                                <div className="card-body-title card-body-title-quiz">Quiz</div>
-                                <div className="card-body-title card-body-title-status">Status</div>
-                                <div className="card-body-title">Grade</div>
-                            </div>
-                            {section.quizzes.map((quiz, index) => (
-                                <div key={quiz.id} className={`card-body-item ${index === section.quizzes.length - 1 ? 'item-last' : ''}`}>
-                                    <div className="card-body-item-quiz">
-                                        {quiz.id} Quiz
-                                    </div>
-                                    <div className="card-body-item-status">
-                                        {quiz.completed ? (
-                                            <>
-                                                <img src="/completed.svg" alt="completed-icon" />
-                                                Completed
-                                            </>
-                                        ) : (
-                                            <>
-                                                <img src="/not-started.svg" alt="not-started-icon" />
-                                                Not Started
-                                            </>
-                                        )}
-                                    </div>
-                                    <div className={`card-body-item-grade ${quiz.grade == null ? "not-completed": ""}`}>
-                                        {quiz.grade !== null ? `${quiz.grade}%` : '-'}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="card-body-item-status">
+                      {quiz.completed ? (
+                        <>
+                          <img src="/completed.svg" alt="completed-icon" />
+                          Completed
+                        </>
+                      ) : (
+                        <>
+                          <img src="/not-started.svg" alt="not-started-icon" />
+                          Not Started
+                        </>
+                      )}
                     </div>
+                    <div className={`card-body-item-grade ${quiz.grade == null ? "not-completed": ""}`}>
+                      {quiz.grade !== null ? `${quiz.grade}%` : '-'}
+                    </div>
+                  </div>
                 ))}
+              </div>
             </div>
+          ))}
         </div>
+        <div className="card-container-right">
+          {rightContainerData.map(section => (
+            <div key={section.id} className="card-container">
+              <div className="card-header">{section.title}</div>
+              <div className="card-body">
+                <div className="card-body-titles">
+                  <div className="card-body-title card-body-title-quiz">Quiz</div>
+                  <div className="card-body-title card-body-title-status">Status</div>
+                  <div className="card-body-title">Grade</div>
+                </div>
+                {section.quizzes.map((quiz, index) => (
+                  <div key={quiz.id} className={`card-body-item ${index === section.quizzes.length - 1 ? 'item-last' : ''}`}>
+                    <div className="card-body-item-quiz">
+                      {quiz.id} Quiz
+                    </div>
+                    <div className="card-body-item-status">
+                      {quiz.completed ? (
+                        <>
+                          <img src="/completed.svg" alt="completed-icon" />
+                          Completed
+                        </>
+                      ) : (
+                        <>
+                          <img src="/not-started.svg" alt="not-started-icon" />
+                          Not Started
+                        </>
+                      )}
+                    </div>
+                    <div className={`card-body-item-grade ${quiz.grade == null ? "not-completed": ""}`}>
+                      {quiz.grade !== null ? `${quiz.grade}%` : '-'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

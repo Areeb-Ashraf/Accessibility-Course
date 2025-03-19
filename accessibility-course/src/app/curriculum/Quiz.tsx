@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/quiz.css';
 import quizData from './quizData.json';
+import { useSession } from 'next-auth/react';
+import { saveQuizResult } from '../actions/quizActions';
 
 interface QuizProps {
   subTitle: string;
@@ -22,6 +24,7 @@ const Quiz: React.FC<QuizProps> = ({ subTitle }) => {
   const [finished, setFinished] = useState(false);
   const [score, setScore] = useState(0);
   const [totalXP, setTotalXP] = useState(0);
+  const { data: session } = useSession();
   
   // Find the quiz for this subtitle
   const quiz = quizData.quizzes.find(q => q.subTitle === subTitle);
@@ -63,7 +66,7 @@ const Quiz: React.FC<QuizProps> = ({ subTitle }) => {
     }
   };
   
-  const finishQuiz = () => {
+  const finishQuiz = async () => {
     let correctCount = 0;
     let earnedXP = 0;
     
@@ -74,9 +77,25 @@ const Quiz: React.FC<QuizProps> = ({ subTitle }) => {
       }
     });
     
+    const scorePercentage = (correctCount / questions.length) * 100;
+    
     setScore(correctCount);
     setTotalXP(earnedXP);
     setFinished(true);
+    
+    // Save results to the database if user is logged in
+    if (session?.user?.id) {
+      try {
+        await saveQuizResult(
+          session.user.id,
+          subTitle, // Using subtitle as the quizId
+          scorePercentage,
+          earnedXP
+        );
+      } catch (error) {
+        console.error("Failed to save quiz result:", error);
+      }
+    }
   };
   
   const retakeQuiz = () => {

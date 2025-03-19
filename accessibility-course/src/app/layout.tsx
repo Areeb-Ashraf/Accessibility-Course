@@ -15,6 +15,9 @@ export const metadata: Metadata = {
   description: "Accessibility course created using Next.js",
 };
 
+// Create client component to avoid server component issues with SessionProvider
+import { SessionProvider } from "./components/session-provider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -23,9 +26,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={lexend.style}>
-        <NavbarWrapper>
-            {children}
-        </NavbarWrapper>
+        <SessionProvider>
+          <NavbarWrapper>
+              {children}
+          </NavbarWrapper>
+        </SessionProvider>
       </body>
     </html>
   );
