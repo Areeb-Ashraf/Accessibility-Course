@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import '../styles/leaderboard.css'
 import Image from "next/image";
 import { useSession } from 'next-auth/react';
-import { getAllUsersWithXp, getTotalUserXp } from '../actions/quizActions';
+import { getAllUsersWithXp, getTotalUserXp, calculateLevelFromXp } from '../actions/quizActions';
 
 interface UserWithXp {
   id: string;
@@ -16,6 +16,7 @@ export default function Leaderboard() {
   const { data: session } = useSession();
   const [users, setUsers] = useState<UserWithXp[]>([]);
   const [currentUserXp, setCurrentUserXp] = useState(0);
+  const [currentUserLevel, setCurrentUserLevel] = useState(0);
   const [loading, setLoading] = useState(true);
   
   // Fetch users data
@@ -39,7 +40,12 @@ export default function Leaderboard() {
         if (session?.user?.id) {
           const userXpResponse = await getTotalUserXp(session.user.id);
           if (userXpResponse.status === 'success') {
-            setCurrentUserXp(userXpResponse.data);
+            const xp = userXpResponse.data;
+            setCurrentUserXp(xp);
+            
+            // Get user level
+            const level = await calculateLevelFromXp(xp);
+            setCurrentUserLevel(level);
           }
         }
       } catch (error) {
@@ -123,7 +129,7 @@ export default function Leaderboard() {
           <div className="leaderboard-left-value-container">
             <div className="leaderboard-left-value">
               <img src="/leaderboard-lvl-icon.svg" alt="Level" />
-              3
+              {currentUserLevel}
             </div>
             <div className="leaderboard-left-label">
               Level

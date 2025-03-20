@@ -2,43 +2,191 @@ import React from "react";
 import { auth, signOut } from "@/auth";
 import "../styles/dashboard.css";
 import Image from "next/image";
+import { getUserInfoWithXp, getAllUsersWithXp, calculateLevelFromXp, xpNeededForNextLevel, getSectionProgress, getNextTodoQuizzes, getSectionXpData } from "../actions/quizActions";
+import Link from "next/link";
+import ScoresChart from "../components/ScoresChart";
+
+// Define types
+interface Performer {
+  id: string;
+  name: string;
+  totalXp: number;
+}
+
+interface ProgressSection {
+  title: string;
+  progress: number;
+}
+
+interface TodoQuiz {
+  quizId: string;
+  title: string;
+  section: string;
+}
 
 export default async function Dashboard() {
   const session = await auth();
   
-  // User's current level and XP (these would normally come from a database)
-  const user_lvl = 2; // Example: User is level 2
-  const user_xp = 150; // Example: User has 150 XP
-
-  // Section completion percentages
-  const progressSections = [
-    { title: 'Perceivable', progress: 75 },
-    { title: 'Operable', progress: 45 },
-    { title: 'Understandable', progress: 60 },
-    { title: 'Robust', progress: 30 }
+  // Default values
+  let userName = "User";
+  let userXp = 0;
+  let userLevel = 0;
+  let xpNeeded: number | null = 25; // Default XP needed for level 2
+  let topPerformers: Performer[] = [];
+  let progressSections: ProgressSection[] = [
+    { title: 'Perceivable', progress: 0 },
+    { title: 'Operable', progress: 0 },
+    { title: 'Understandable', progress: 0 },
+    { title: 'Robust', progress: 0 }
   ];
+  let todoQuizzes: TodoQuiz[] = [];
+  let sectionXpData: {[sectionTitle: string]: number} = {
+    'Perceivable': 0,
+    'Operable': 0,
+    'Understandable': 0,
+    'Robust': 0
+  };
+  
+  // Fetch real data if user is logged in
+  if (session?.user?.id) {
+    try {
+      // Get user's info and XP
+      const userInfoResponse = await getUserInfoWithXp(session.user.id);
+      if (userInfoResponse.status === 'success') {
+        userName = userInfoResponse.data.name;
+        userXp = userInfoResponse.data.totalXp;
+        userLevel = await calculateLevelFromXp(userXp);
+        xpNeeded = await xpNeededForNextLevel(userXp);
+      }
+      
+      // Get all users with XP for top performers
+      const allUsersResponse = await getAllUsersWithXp();
+      if (allUsersResponse.status === 'success') {
+        // Limit to top 10 performers
+        topPerformers = allUsersResponse.data.slice(0, 10);
+      }
+      
+      // Get section progress
+      const progressResponse = await getSectionProgress(session.user.id);
+      if (progressResponse.status === 'success') {
+        // Update section progress with real data
+        progressSections = [
+          { title: 'Perceivable', progress: progressResponse.data['1'] || 0 },
+          { title: 'Operable', progress: progressResponse.data['2'] || 0 },
+          { title: 'Understandable', progress: progressResponse.data['3'] || 0 },
+          { title: 'Robust', progress: progressResponse.data['4'] || 0 }
+        ];
+      }
+      
+      // Get next todo quizzes
+      const todoResponse = await getNextTodoQuizzes(session.user.id);
+      if (todoResponse.status === 'success') {
+        todoQuizzes = todoResponse.data;
+      }
+      
+      // Get section XP data for chart
+      const sectionXpResponse = await getSectionXpData(session.user.id);
+      if (sectionXpResponse.status === 'success') {
+        sectionXpData = sectionXpResponse.data;
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  }
 
-   // Dummy data for top performers
-   const performersData = [
-    { id: 1, name: "Emma Johnson", xp: 250 },
-    { id: 2, name: "Michael Chen", xp: 320 },
-    { id: 3, name: "Sophia Rodriguez", xp: 180 },
-    { id: 4, name: "Aiden Patel", xp: 290 },
-    { id: 5, name: "Olivia Williams", xp: 210 },
-    { id: 6, name: "Noah Thompson", xp: 175 },
-    { id: 7, name: "Isabella Garcia", xp: 160 },
-    { id: 8, name: "Liam Wilson", xp: 145 },
-    { id: 9, name: "Ava Martinez", xp: 130 },
-    { id: 10, name: "Ethan Brown", xp: 120 }
-  ];
-
-  // Sort by XP in descending order and add rank
-  const sortedPerformers = [...performersData]
-    .sort((a, b) => b.xp - a.xp)
-    .map((user, index) => ({
-      ...user,
-      rank: index + 1
-    }));
+  // Render appropriate content for todo cards based on remaining quizzes
+  const renderTodoCards = () => {
+    // If no quizzes are left
+    if (todoQuizzes.length === 0) {
+      return (
+        <>
+          <div className="todo-card">
+            <div className="todo-inner">
+              <div className="todo-image-container">
+                <img src="/db-todo-image.svg" alt="todo-img" />
+              </div>
+              <div className="todo-text-container">
+                <p>You finished all todos!</p>
+              </div>
+            </div>
+          </div>
+          <div className="todo-card">
+            <div className="todo-inner">
+              <div className="todo-image-container">
+                <img src="/db-todo-image.svg" alt="todo-img" />
+              </div>
+              <div className="todo-text-container">
+                <p>You finished all todos!</p>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    }
+    
+    // If only one quiz is left
+    if (todoQuizzes.length === 1) {
+      return (
+        <>
+          <div className="todo-card">
+            <div className="todo-inner">
+              <div className="todo-image-container">
+                <img src="/db-todo-image.svg" alt="todo-img" />
+              </div>
+              <div className="todo-text-container">
+                <p>{todoQuizzes[0].quizId}</p>
+              </div>
+              <Link href={`/curriculum`} className="todo-continue">
+                continue
+              </Link>
+            </div>
+          </div>
+          <div className="todo-card">
+            <div className="todo-inner">
+              <div className="todo-image-container">
+                <img src="/db-todo-image.svg" alt="todo-img" />
+              </div>
+              <div className="todo-text-container">
+                <p>You finished almost all todos!</p>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    }
+    
+    // If two or more quizzes are left
+    return (
+      <>
+        <div className="todo-card">
+          <div className="todo-inner">
+            <div className="todo-image-container">
+              <img src="/db-todo-image.svg" alt="todo-img" />
+            </div>
+            <div className="todo-text-container">
+              <p>{todoQuizzes[0].quizId}</p>
+            </div>
+            <Link href={`/curriculum`} className="todo-continue">
+              continue
+            </Link>
+          </div>
+        </div>
+        <div className="todo-card">
+          <div className="todo-inner">
+            <div className="todo-image-container">
+              <img src="/db-todo-image.svg" alt="todo-img" />
+            </div>
+            <div className="todo-text-container">
+              <p>{todoQuizzes[1].quizId} {todoQuizzes[1].title}</p>
+            </div>
+            <Link href={`/curriculum`} className="todo-continue">
+              continue
+            </Link>
+          </div>
+        </div>
+      </>
+    );
+  };
 
   return (
     <>
@@ -47,18 +195,24 @@ export default async function Dashboard() {
           <div className="dashboard-left">
             <div className="dashboard-panel">
               <div className="dashboard-panel-greeting">
-                <h2>Hey, Oliver!</h2>
+                <h2>Hey, {userName}!</h2>
                 <p>Another great day to continue learning.</p>
               </div>
               <div className="dashboard-panel-progress">
                 <div className="progress-text">
                   <img src="/db-panel-icon.svg" alt="lvl-icon" />
-                  <p>Take 2 more quizzes to Level Up</p>
+                  {xpNeeded !== null ? (
+                    <p>Keep going! {xpNeeded} XP left to Level Up</p>
+                  ) : (
+                    <p>Hooray! You've reached the highest level!</p>
+                  )}
                 </div>
                 <div className="progress-lvls">
-                  <div className="prev-lvl">Level 3</div>
+                  <div className="prev-lvl">Level {userLevel}</div>
                   <p>-------------</p>
-                  <div className="next-lvl">Level 4</div>
+                  <div className="next-lvl">
+                    {userLevel < 4 ? `Level ${userLevel + 1}` : 'Master'}
+                  </div>
                 </div>
               </div>
             </div>
@@ -66,40 +220,13 @@ export default async function Dashboard() {
               <div className="dashboard-todo">
                 To Do
                 <div className="todo-card-container">
-                  <div className="todo-card">
-                    <div className="todo-inner">
-                      <div className="todo-image-container">
-                        <img src="/db-todo-image.svg" alt="todo-img" />
-                      </div>
-                      <div className="todo-text-container">
-                        <p>4.1 Compatible Quiz</p>
-                      </div>
-                      <div className="todo-progress-container">
-                        <div className="todo-progress-bar">
-                          <div className="todo-progress-fill" style={{ width: '50%' }}></div>
-                        </div>
-                        <p>50%</p>
-                      </div> 
-                      <div className="todo-continue"> 
-                        continue
-                      </div>
-                    </div>
-                  </div>
-                  <div className="todo-card"></div>
+                  {renderTodoCards()}
                 </div>
               </div>
               <div className="dashboard-recent-scores">
                 Recent Scores
                 <div className="recent-score-chart-container">
-                  {/* <pre>{JSON.stringify(session, null, 2)}</pre>
-                  <form
-                    action={async () => {
-                      "use server";
-                      await signOut({ redirectTo: "/login" });
-                    }}
-                  >
-                    <button type="submit"> signOut</button>
-                  </form> */}
+                  <ScoresChart sectionData={sectionXpData} />
                 </div>
               </div>
             </div>
@@ -107,18 +234,18 @@ export default async function Dashboard() {
             <div className="dashboard-achievements">
               Achievements
               <div className="badges-container">
-                {[1, 2, 3, 4].map((level) => (
+                {[0, 2, 3, 4].map((level) => (
                   <div key={`level-${level}`} className="badge-item">
                     <img 
                       src="/achievement-lvl-badge.svg" 
                       alt={`Level ${level} badge`} 
-                      style={{ filter: level > user_lvl ? 'grayscale(1)' : 'none' }}
+                      style={{ filter: level > userLevel ? 'grayscale(1)' : 'none' }}
                     />
                     <span className="badge-text">Level {level}</span>
                   </div>
                 ))}
                 {[5, 10, 25, 50, 100, 150, 200, 300, 500, 700, 1000].map((xp) => (
-                  <div key={`xp-${xp}`} className="xp-badge-item" style={{ filter: xp > user_xp ? 'grayscale(1)' : 'none' }}>
+                  <div key={`xp-${xp}`} className="xp-badge-item" style={{ filter: xp > userXp ? 'grayscale(1)' : 'none' }}>
                     <img 
                       src="/achievement-xp-badge.svg" 
                       alt={`XP ${xp} badge`} 
@@ -176,7 +303,7 @@ export default async function Dashboard() {
             <div className="xp-container">
               <div className="dashboard-value">
                 <img src="/leaderboard-xp-icon.svg" alt="XP" />
-                20
+                {userXp}
               </div>
               <div className="dashboard-label">
                 XP Points
@@ -185,7 +312,7 @@ export default async function Dashboard() {
             <div className="lvl-container">
               <div className="dashboard-value">
                 <img src="/leaderboard-lvl-icon.svg" alt="Level" />
-                3
+                {userLevel}
               </div>
               <div className="dashboard-label">
                 Level
@@ -197,22 +324,26 @@ export default async function Dashboard() {
               Top Performers
             </div>
             <div className="top-performers-container">
-                {sortedPerformers.map(performer => (
-                  <div key={performer.id} className="top-performers-item">
-                    <div className="performer-rank">{performer.rank}</div>
-                    <div className="performer-pfp-container">
-                      <Image
-                        aria-hidden
-                        src="/default-pfp-18.jpg"
-                        alt="profile picture"
-                        width={45}
-                        height={45}
-                      />
+                {topPerformers.length > 0 ? (
+                  topPerformers.map((performer, index) => (
+                    <div key={performer.id} className="top-performers-item">
+                      <div className="performer-rank">{index + 1}</div>
+                      <div className="performer-pfp-container">
+                        <Image
+                          aria-hidden
+                          src="/default-pfp-18.jpg"
+                          alt="profile picture"
+                          width={45}
+                          height={45}
+                        />
+                      </div>
+                      <p>{performer.name}</p>
+                      <div className="performer-xp">{performer.totalXp}xp</div>
                     </div>
-                    <p>{performer.name}</p>
-                    <div className="performer-xp">{performer.xp}xp</div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <div className="no-performers">No users yet</div>
+                )}
               </div>
           </div>
           </div>
