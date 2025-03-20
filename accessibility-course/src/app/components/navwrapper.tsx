@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "./navbar";
 import React from 'react';
 import AuthGuard from "./AuthGuard";
+import RefreshOnNavigate from "./RefreshOnNavigate";
 
 export default function NavbarWrapper({
     children,
@@ -22,6 +23,7 @@ export default function NavbarWrapper({
 
     return (
         <>
+            <RefreshOnNavigate />
             {!noNavbarRoutes.includes(pathname) && <Navbar />}
             {isPublicRoute ? (
                 children
