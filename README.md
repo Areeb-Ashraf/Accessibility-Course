@@ -4,6 +4,18 @@
 ![Education](https://img.shields.io/badge/Category-Educational%20Platform-green)
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
+## 🛡️ Technologies
+
+![Next.js](https://img.shields.io/badge/Next.js-15.0.3-000000?style=flat&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=flat&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat&logo=typescript&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-6.5.0-2D3748?style=flat&logo=prisma&logoColor=white)
+![NextAuth.js](https://img.shields.io/badge/NextAuth.js-5.0-000000?style=flat&logo=auth0&logoColor=white)
+![AWS S3](https://img.shields.io/badge/AWS_S3-Storage-569A31?style=flat&logo=amazon-aws&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-4.4.8-FF6384?style=flat&logo=chart.js&logoColor=white)
+![Zod](https://img.shields.io/badge/Zod-Validation-3068B7?style=flat&logo=zod&logoColor=white)
+![TurboPack](https://img.shields.io/badge/TurboPack-Build_Tool-000000?style=flat&logo=vercel&logoColor=white)
+
 ## 🚀 Project Overview
 
 The Web Accessibility Learning Platform is a comprehensive educational tool designed to teach web developers and designers how to create more inclusive digital experiences. This interactive platform provides structured learning paths, hands-on exercises, and real-time feedback to help users master the principles of digital accessibility.
