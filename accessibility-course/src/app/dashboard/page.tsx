@@ -177,7 +177,7 @@ export default async function Dashboard() {
               <img src="/db-todo-image.svg" alt="todo-img" />
             </div>
             <div className="todo-text-container">
-              <p>{todoQuizzes[1].quizId} {todoQuizzes[1].title}</p>
+              <p>{todoQuizzes[1].quizId}</p>
             </div>
             <Link href={`/curriculum`} className="todo-continue">
               continue
