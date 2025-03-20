@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from "next/image";
@@ -5,11 +6,15 @@ import { usePathname } from 'next/navigation';
 import { auth, signOut } from '@/auth';
 import { signOutUser } from '../actions/authAction';
 import '../styles/navbar.css';
+import { useSession } from 'next-auth/react';
+import { getUserProfileImage } from '../actions/settingsActions';
 
 export default function Navbar() {
     const pathname = usePathname();
+    const { data: session } = useSession();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [userProfileImage, setUserProfileImage] = useState<string | null>(null);
 
     const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
     const closeSidebar = () => setSidebarOpen(false);
@@ -18,6 +23,24 @@ export default function Navbar() {
     const closeDropdown = () => setDropdownOpen(false);
 
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Fetch user profile image
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            if (session?.user?.id) {
+                try {
+                    const response = await getUserProfileImage();
+                    if (response.status === 'success' && response.data?.image) {
+                        setUserProfileImage(response.data.image);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user profile image:", error);
+                }
+            }
+        };
+
+        fetchUserProfile();
+    }, [session]);
 
     useEffect(() => {
         const handleOutsideClick = (event: MouseEvent) => {
@@ -105,10 +128,11 @@ export default function Navbar() {
                 <div className={`navbar-profile ${pathname === '/settings' ? 'profile-active' : ''}`} onClick={toggleDropdown} ref={dropdownRef}>
                     <Image
                         aria-hidden
-                        src="/default-pfp-18.jpg"
+                        src={userProfileImage ? userProfileImage : "/default-pfp-18.jpg"}
                         alt="profile picture"
                         width={35}
                         height={35}
+                        unoptimized={!!userProfileImage}
                     />
                     {dropdownOpen && (
                         <div className="profile-dropdown">

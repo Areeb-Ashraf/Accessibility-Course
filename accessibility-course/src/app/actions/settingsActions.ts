@@ -75,4 +75,45 @@ export async function getUserProfile() {
     ...user,
     image: imageUrl,
   };
+}
+
+export async function getUserProfileImage() {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Not authenticated");
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        image: true,
+      },
+    });
+
+    // If the user has an image, get a signed URL
+    let imageUrl = user?.image;
+    if (imageUrl) {
+      try {
+        // Extract the key from the image URL
+        const urlParts = imageUrl.split('.amazonaws.com/');
+        if (urlParts.length > 1) {
+          const key = urlParts[1];
+          imageUrl = await getSignedImageUrl(key);
+        }
+      } catch (error) {
+        console.error('Error getting signed URL:', error);
+        // Fall back to the original URL if there's an error
+      }
+    }
+
+    return { 
+      status: 'success', 
+      data: { image: imageUrl } 
+    };
+  } catch (error) {
+    console.error('Error in getUserProfileImage:', error);
+    return { 
+      status: 'error', 
+      error: 'Failed to get user profile image' 
+    };
+  }
 } 

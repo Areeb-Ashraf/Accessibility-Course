@@ -193,13 +193,14 @@ export async function getTotalUserXp(userId: string): Promise<ActionResult<numbe
   }
 }
 
-export async function getAllUsersWithXp(): Promise<ActionResult<{ id: string; name: string; totalXp: number }[]>> {
+export async function getAllUsersWithXp(): Promise<ActionResult<{ id: string; name: string; totalXp: number; image?: string | null }[]>> {
   try {
     // First get all users
     const users = await prisma.user.findMany({
       select: {
         id: true,
-        name: true
+        name: true,
+        image: true
       }
     });
     
@@ -211,15 +212,46 @@ export async function getAllUsersWithXp(): Promise<ActionResult<{ id: string; na
       }
     });
     
+    // Process image URLs if needed
+    const usersWithProcessedImages = await Promise.all(
+      users.map(async (user) => {
+        let imageUrl = user.image;
+        
+        // If the user has an image stored, get a signed URL
+        if (imageUrl) {
+          try {
+            // Extract the key from the image URL
+            const urlParts = imageUrl.split('.amazonaws.com/');
+            if (urlParts.length > 1) {
+              const key = urlParts[1];
+              
+              // Import here to avoid reference errors
+              const { getSignedImageUrl } = await import('@/lib/s3');
+              imageUrl = await getSignedImageUrl(key);
+            }
+          } catch (error) {
+            console.error('Error getting signed URL:', error);
+            // Fall back to the original URL if there's an error
+          }
+        }
+        
+        return {
+          ...user,
+          image: imageUrl
+        };
+      })
+    );
+    
     // Calculate total XP for each user
-    const usersWithXp = users.map(user => {
+    const usersWithXp = usersWithProcessedImages.map(user => {
       const userResults = quizResults.filter(result => result.userId === user.id);
       const totalXp = userResults.reduce((sum, result) => sum + result.xpEarned, 0);
       
       return {
         id: user.id,
         name: user.name || 'Unnamed User', // Fallback for users without names
-        totalXp
+        totalXp,
+        image: user.image
       };
     });
     

@@ -3,14 +3,18 @@ import { auth, signOut } from "@/auth";
 import "../styles/dashboard.css";
 import Image from "next/image";
 import { getUserInfoWithXp, getAllUsersWithXp, calculateLevelFromXp, xpNeededForNextLevel, getSectionProgress, getNextTodoQuizzes, getSectionXpData } from "../actions/quizActions";
+import { getUserProfile } from "../actions/settingsActions";
 import Link from "next/link";
 import ScoresChart from "../components/ScoresChart";
+import { prisma } from "@/lib/prisma";
+import { getSignedImageUrl } from "@/lib/s3";
 
 // Define types
 interface Performer {
   id: string;
   name: string;
   totalXp: number;
+  image?: string | null;
 }
 
 interface ProgressSection {
@@ -46,6 +50,7 @@ export default async function Dashboard() {
     'Understandable': 0,
     'Robust': 0
   };
+  let userProfileImage: string | null = null;
   
   // Fetch real data if user is logged in
   if (session?.user?.id) {
@@ -59,11 +64,66 @@ export default async function Dashboard() {
         xpNeeded = await xpNeededForNextLevel(userXp);
       }
       
+      // Get user's profile image
+      try {
+        const userProfileResponse = await getUserProfile();
+        if (userProfileResponse && userProfileResponse.image) {
+          userProfileImage = userProfileResponse.image;
+        }
+      } catch (error) {
+        console.error("Error fetching user profile image:", error);
+      }
+      
       // Get all users with XP for top performers
       const allUsersResponse = await getAllUsersWithXp();
       if (allUsersResponse.status === 'success') {
         // Limit to top 10 performers
-        topPerformers = allUsersResponse.data.slice(0, 10);
+        const topTenUsers = allUsersResponse.data.slice(0, 10);
+        
+        // Fetch profile images for each user
+        const usersWithImages = await Promise.all(
+          topTenUsers.map(async (user) => {
+            try {
+              // Get the user's profile from the database
+              const userProfile = await prisma.user.findUnique({
+                where: { id: user.id },
+                select: { image: true }
+              });
+              
+              let imageUrl: string | null = null;
+              
+              // If user has an image stored, try to get a signed URL
+              if (userProfile?.image) {
+                try {
+                  // Extract the key from the S3 URL
+                  const urlParts = userProfile.image.split('.amazonaws.com/');
+                  if (urlParts.length > 1) {
+                    const key = urlParts[1];
+                    imageUrl = await getSignedImageUrl(key);
+                  } else {
+                    imageUrl = userProfile.image;
+                  }
+                } catch (imgError) {
+                  console.error(`Error getting signed URL for user ${user.id}:`, imgError);
+                  imageUrl = null;
+                }
+              }
+              
+              return {
+                ...user,
+                image: imageUrl
+              };
+            } catch (error) {
+              console.error(`Error fetching profile for user ${user.id}:`, error);
+              return {
+                ...user,
+                image: null
+              };
+            }
+          })
+        );
+        
+        topPerformers = usersWithImages;
       }
       
       // Get section progress
@@ -331,10 +391,11 @@ export default async function Dashboard() {
                       <div className="performer-pfp-container">
                         <Image
                           aria-hidden
-                          src="/default-pfp-18.jpg"
+                          src={performer.image ? performer.image : "/default-pfp-18.jpg"}
                           alt="profile picture"
                           width={45}
                           height={45}
+                          unoptimized={performer.image ? true : false}
                         />
                       </div>
                       <p>{performer.name}</p>

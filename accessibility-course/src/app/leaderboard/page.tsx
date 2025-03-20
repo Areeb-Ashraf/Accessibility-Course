@@ -10,6 +10,7 @@ interface UserWithXp {
   name: string;
   totalXp: number;
   rank?: number;
+  image?: string | null;
 }
 
 export default function Leaderboard() {
@@ -27,12 +28,13 @@ export default function Leaderboard() {
         const response = await getAllUsersWithXp();
         
         if (response.status === 'success') {
-          // Add rank to each user
+          // Add rank to each user and use user data directly
           const usersWithRank = response.data.map((user, index) => ({
             ...user,
             rank: index + 1
           }));
           
+          // We'll use the data directly without client-side fetching of images
           setUsers(usersWithRank);
         }
         
@@ -150,10 +152,11 @@ export default function Leaderboard() {
                 <div className="profile-image-circle">
                   <Image
                     aria-hidden
-                    src="/default-pfp-18.jpg"
+                    src={user.image || "/default-pfp-18.jpg"}
                     alt="profile picture"
                     width={90}
                     height={90}
+                    unoptimized={!!user.image}
                   />
                 </div>
                 {/* Add badge based on user rank */}
