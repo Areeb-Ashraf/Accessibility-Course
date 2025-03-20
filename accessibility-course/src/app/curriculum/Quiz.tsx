@@ -7,6 +7,7 @@ import { saveQuizResult } from '../actions/quizActions';
 
 interface QuizProps {
   subTitle: string;
+  onComplete?: (quizId: string) => void;
 }
 
 interface Question {
@@ -17,7 +18,7 @@ interface Question {
   xp: number;
 }
 
-const Quiz: React.FC<QuizProps> = ({ subTitle }) => {
+const Quiz: React.FC<QuizProps> = ({ subTitle, onComplete }) => {
   const [started, setStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
@@ -92,6 +93,11 @@ const Quiz: React.FC<QuizProps> = ({ subTitle }) => {
           scorePercentage,
           earnedXP
         );
+        
+        // Call the onComplete callback to update sidebar status
+        if (onComplete) {
+          onComplete(subTitle);
+        }
       } catch (error) {
         console.error("Failed to save quiz result:", error);
       }

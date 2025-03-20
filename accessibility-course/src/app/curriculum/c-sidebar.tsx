@@ -3,19 +3,49 @@ import React, { useState, useEffect, useRef } from 'react'
 import '../styles/csidebar.css'
 import Image from "next/image";
 import curriculumData from './curriculumData.json';
+import { useSession } from 'next-auth/react';
 
 interface CsidebarProps {
     children: React.ReactNode;
     onSubItemClick: (subItem: { subTitle: string; subSections: { title: string; content: string }[] }) => void;
     onReportCardClick: () => void; // Add callback for report card click
     reportCardActive?: boolean; // Track if report card is active
+    completedQuizzes: string[]; // Array of completed quiz IDs
 }
 
-const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick, onReportCardClick, reportCardActive = false }) => {
+const Csidebar: React.FC<CsidebarProps> = ({ 
+    children, 
+    onSubItemClick, 
+    onReportCardClick, 
+    reportCardActive = false,
+    completedQuizzes = [] 
+}) => {
     const [openAccordion, setOpenAccordion] = useState(null); // Track the open accordion by index
     const [sidebarOpen, setSidebarOpen] = useState(true); // Track if sidebar is open (default to open on desktop)
     const [isMobile, setIsMobile] = useState(false); // Track if we're on mobile view
     const [manualToggle, setManualToggle] = useState(false); // Track if sidebar was manually toggled
+    const [overallProgress, setOverallProgress] = useState(0); // Track overall progress percentage
+
+    // Calculate overall progress whenever completedQuizzes changes
+    useEffect(() => {
+        // Calculate overall progress
+        const totalSections = curriculumData.sections.reduce(
+            (total, section) => total + section.subItems.length, 0
+        );
+        
+        const progressPercentage = totalSections > 0 
+            ? Math.round((completedQuizzes.length / totalSections) * 100)
+            : 0;
+            
+        setOverallProgress(progressPercentage);
+    }, [completedQuizzes]);
+
+    // Function to check if all subItems in a section are completed
+    const isSectionCompleted = (section) => {
+        return section.subItems.every(subItem => 
+            completedQuizzes.includes(subItem.subTitle)
+        );
+    };
 
     const toggleAccordion = (index) => {
       setOpenAccordion(openAccordion === index ? null : index); // Toggle open/close for the clicked accordion
@@ -109,8 +139,10 @@ const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick, onReportC
                         {sidebarOpen ? 'Hide' : 'Show'}
                     </div>
                     <div className="Csidebar-title">Web Content Accessibility</div>
-                    <div className="Csidebar-percent">75 % completed</div>
-                    <div className="Csidebar-progressbar-container"><div className="Csidebar-progressbar" style={{width : "75%"}}></div></div>
+                    <div className="Csidebar-percent">{overallProgress} % completed</div>
+                    <div className="Csidebar-progressbar-container">
+                        <div className="Csidebar-progressbar" style={{width : `${overallProgress}%`}}></div>
+                    </div>
                     {accordionsData.map((accordion, index) => (
                         <div
                         className="Csidebar-Accordian-Container"
@@ -131,7 +163,10 @@ const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick, onReportC
                             />
                             </div>
                             <div className="Csidebar-Accordian-text">{accordion.title}</div>
-                            <div className="Csidebar-Accordian-Satus">
+                            <div 
+                                className="Csidebar-Accordian-Satus"
+                                style={{ display: isSectionCompleted(accordion) ? 'flex' : 'none' }}
+                            >
                             <Image
                                 aria-hidden
                                 src="Csidebar-status.svg"
@@ -151,7 +186,10 @@ const Csidebar: React.FC<CsidebarProps> = ({ children, onSubItemClick, onReportC
                                 key={subIndex}
                                 onClick={() => handleSubItemClick(subItem)} 
                                 >
-                                <div className="Csidevbar-Accordian-subitem-status">
+                                <div 
+                                    className="Csidevbar-Accordian-subitem-status"
+                                    style={{ display: completedQuizzes.includes(subItem.subTitle) ? 'flex' : 'none' }}
+                                >
                                     <Image
                                         aria-hidden
                                         src="Csidebar-status.svg"

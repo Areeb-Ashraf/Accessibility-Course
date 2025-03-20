@@ -11,9 +11,10 @@ interface AccordionProps {
       content: string;
     }[];
   };
+  onQuizComplete?: (quizId: string) => void;
 }
 
-const Accordion: React.FC<AccordionProps> = ({ subItem }) => {
+const Accordion: React.FC<AccordionProps> = ({ subItem, onQuizComplete }) => {
   const [activePanels, setActivePanels] = useState<number[]>([]);
 
   const toggleAccordion = (index: number) => {
@@ -22,6 +23,13 @@ const Accordion: React.FC<AccordionProps> = ({ subItem }) => {
       } else {
           setActivePanels([...activePanels, index]);
       }
+  };
+
+  // Handle quiz completion
+  const handleQuizComplete = (quizId: string) => {
+    if (onQuizComplete) {
+      onQuizComplete(quizId);
+    }
   };
 
   // Generate sections based on the selected sub-item
@@ -66,7 +74,11 @@ const Accordion: React.FC<AccordionProps> = ({ subItem }) => {
           }}
         >
           <div className='panel-text'>
-            <Quiz key={subItem.subTitle} subTitle={subItem.subTitle} />
+            <Quiz 
+              key={subItem.subTitle} 
+              subTitle={subItem.subTitle} 
+              onComplete={() => handleQuizComplete(subItem.subTitle)}
+            />
           </div>
         </div>
       </div>
