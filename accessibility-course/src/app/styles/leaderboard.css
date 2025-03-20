@@ -1,5 +1,5 @@
 .leaderboard-container {
-  height: calc(100vh - 56px);
+  min-height: calc(100vh - 56px);
   background-color: #F5EBE0;
   display: flex;
   width: 100%;
