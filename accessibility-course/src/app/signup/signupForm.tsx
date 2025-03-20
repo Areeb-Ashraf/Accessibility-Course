@@ -1,12 +1,17 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import '../styles/form.css'
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema, registerSchema } from "@/lib/schemas/RegisterSchema";
 import { registerUser } from "../actions/authAction";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from "next/navigation";
 
 export default function SignupForm() {
+    const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { register, handleSubmit, setError, formState: {isValid, errors} } = useForm<RegisterSchema>( {
         resolver: zodResolver(registerSchema),
         mode: "onTouched",
@@ -14,26 +19,38 @@ export default function SignupForm() {
       const onSubmit = async (
         data: RegisterSchema
       ) => {
-        const result = await registerUser(data);
-        if (result.status === "success") {
-          console.log("User registered successfully");
-        } else {
-          if (Array.isArray(result.error)) {
-            result.error.forEach((e: any) => {
-              console.log("e::: ", e);
-              const fieldName = e.path.join(".") as
-                | "email"
-                | "name"
-                | "password";
-              setError(fieldName, {
-                message: e.message,
-              });
+        setIsSubmitting(true);
+        try {
+          const result = await registerUser(data);
+          if (result.status === "success") {
+            toast.success("User registered successfully!", {
+              onClose: () => {
+                router.push("/login");
+              }
             });
           } else {
-            setError("root.serverError", {
-              message: result.error,
-            });
+            if (Array.isArray(result.error)) {
+              result.error.forEach((e: any) => {
+                console.log("e::: ", e);
+                const fieldName = e.path.join(".") as
+                  | "email"
+                  | "name"
+                  | "password";
+                setError(fieldName, {
+                  message: e.message,
+                });
+              });
+            } else {
+              setError("root.serverError", {
+                message: result.error,
+              });
+              toast.error(result.error || "Registration failed");
+            }
           }
+        } catch (error) {
+          toast.error("Something went wrong. Please try again.");
+        } finally {
+          setIsSubmitting(false);
         }
       }
   return (
@@ -62,10 +79,16 @@ export default function SignupForm() {
                 <input className="form-input" type="password" />
             </label> */}
           {/* </div> */}
-          <button className="form-submit" type="submit" disabled={!isValid}>Sign up</button>
+          <button className="form-submit" type="submit" disabled={!isValid || isSubmitting}>
+            {isSubmitting ? "Signing up..." : "Sign up"}
+          </button>
+          {errors.root?.serverError && (
+            <p className="form-error">{String(errors.root.serverError.message)}</p>
+          )}
         </form>
         <div className="form-link-text">Have an account? <a href="/login">log in</a ></div>
       </div>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover />
     </>
   );
 }
