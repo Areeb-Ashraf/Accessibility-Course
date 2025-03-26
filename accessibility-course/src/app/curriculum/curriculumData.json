@@ -9,15 +9,15 @@
             "subSections": [
               {
                 "title": "1.1.1 Images and Graphics",
-                "content": "Provide text alternatives for all non-text content including images, icons, and graphics. Use alt attributes that accurately describe the purpose or content of the image."
+                "content": "<p>Provide text alternatives for all non-text content including images, icons, and graphics. Use alt attributes that accurately describe the purpose or content of the image.</p>"
               },
               {
                 "title": "1.1.2 Audio and Video",
-                "content": "Include captions for videos and transcripts for audio content. This ensures users who are deaf or hard of hearing can access multimedia content."
+                "content": "<p>Include captions for videos and transcripts for audio content. This ensures users who are deaf or hard of hearing can access multimedia content.</p>"
               },
               {
                 "title": "1.1.3 Data Visualizations",
-                "content": "Ensure charts, graphs, and infographics have text descriptions explaining the key information they convey. Complex data should be available in alternative accessible formats."
+                "content": "<p>Ensure charts, graphs, and infographics have text descriptions explaining the key information they convey. Complex data should be available in alternative accessible formats.</p>"
               }
             ]
           },
@@ -26,15 +26,15 @@
             "subSections": [
               {
                 "title": "1.2.1 Responsive Design",
-                "content": "Create layouts that adapt to different screen sizes and orientations. Content should be viewable without requiring horizontal scrolling at standard zoom levels."
+                "content": "<p>Create layouts that adapt to different screen sizes and orientations. Content should be viewable without requiring horizontal scrolling at standard zoom levels.</p>"
               },
               {
                 "title": "1.2.2 Color and Contrast",
-                "content": "Ensure sufficient contrast between text and background colors. Never use color alone to convey information, as users with color blindness may miss these cues."
+                "content": "<p>Ensure sufficient contrast between text and background colors. Never use color alone to convey information, as users with color blindness may miss these cues.</p>"
               },
               {
                 "title": "1.2.3 Text Resizing",
-                "content": "Allow text to be resized up to 200% without loss of content or functionality. Use relative units like em or rem instead of fixed pixel sizes."
+                "content": "<p>Allow text to be resized up to 200% without loss of content or functionality. Use relative units like em or rem instead of fixed pixel sizes.</p>"
               }
             ]
           }
@@ -48,15 +48,15 @@
             "subSections": [
               {
                 "title": "2.1.1 Keyboard Navigation",
-                "content": "Ensure all functionality is available using only a keyboard. Users with motor disabilities often rely on keyboards or keyboard alternatives rather than mice."
+                "content": "<p>Ensure all functionality is available using only a keyboard. Users with motor disabilities often rely on keyboards or keyboard alternatives rather than mice.</p>"
               },
               {
                 "title": "2.1.2 Focus Management",
-                "content": "Maintain a visible focus indicator when navigating with a keyboard. The tab order should follow a logical sequence that matches the visual layout."
+                "content": "<p>Maintain a visible focus indicator when navigating with a keyboard. The tab order should follow a logical sequence that matches the visual layout.</p>"
               },
               {
                 "title": "2.1.3 Keyboard Traps",
-                "content": "Avoid keyboard traps where users can tab into an element but cannot tab away from it. This prevents users from navigating through the entire interface."
+                "content": "<p>Avoid keyboard traps where users can tab into an element but cannot tab away from it. This prevents users from navigating through the entire interface.</p>"
               }
             ]
           },
@@ -65,11 +65,11 @@
             "subSections": [
               {
                 "title": "2.2.1 Time Limits",
-                "content": "Provide options to extend or remove time limits on interactions. Some users with disabilities may need more time to complete tasks or read content."
+                "content": "<p>Provide options to extend or remove time limits on interactions. Some users with disabilities may need more time to complete tasks or read content.</p>"
               },
               {
                 "title": "2.2.2 Moving Content",
-                "content": "Allow users to pause, stop, or hide any moving, blinking, or auto-updating content. This helps users who have difficulty tracking moving objects or get distracted easily."
+                "content": "<p>Allow users to pause, stop, or hide any moving, blinking, or auto-updating content. This helps users who have difficulty tracking moving objects or get distracted easily.</p>"
               }
             ]
           },
@@ -78,7 +78,7 @@
             "subSections": [
               {
                 "title": "2.3.1 Flashing Content",
-                "content": "Avoid content that flashes more than three times per second, as this can trigger seizures in people with photosensitive epilepsy."
+                "content": "<p>Avoid content that flashes more than three times per second, as this can trigger seizures in people with photosensitive epilepsy.</p>"
               }
             ]
           }
@@ -92,11 +92,11 @@
             "subSections": [
               {
                 "title": "3.1.1 Clear Language",
-                "content": "Use clear, simple language appropriate for the content. Avoid jargon and complex terminology when possible, or provide definitions when specialized terms are necessary."
+                "content": "<p>Use clear, simple language appropriate for the content. Avoid jargon and complex terminology when possible, or provide definitions when specialized terms are necessary.</p>"
               },
               {
                 "title": "3.1.2 Language Identification",
-                "content": "Specify the primary language of the page and indicate changes in language within content. This helps screen readers pronounce content correctly."
+                "content": "<p>Specify the primary language of the page and indicate changes in language within content. This helps screen readers pronounce content correctly.</p>"
               }
             ]
           },
@@ -105,11 +105,11 @@
             "subSections": [
               {
                 "title": "3.2.1 Consistent Navigation",
-                "content": "Maintain consistent navigation patterns throughout the site. Users should be able to predict where to find navigation elements on each page."
+                "content": "<p>Maintain consistent navigation patterns throughout the site. Users should be able to predict where to find navigation elements on each page.</p>"
               },
               {
                 "title": "3.2.2 Predictable Interactions",
-                "content": "Make sure components with the same functionality look and behave consistently. Avoid surprising users with unexpected changes when they interact with elements."
+                "content": "<p>Make sure components with the same functionality look and behave consistently. Avoid surprising users with unexpected changes when they interact with elements.</p>"
               }
             ]
           },
@@ -118,11 +118,11 @@
             "subSections": [
               {
                 "title": "3.3.1 Error Identification",
-                "content": "Clearly identify input errors and provide descriptive error messages. Users should understand what went wrong and how to fix it."
+                "content": "<p>Clearly identify input errors and provide descriptive error messages. Users should understand what went wrong and how to fix it.</p>"
               },
               {
                 "title": "3.3.2 Form Labels and Instructions",
-                "content": "Provide clear labels and instructions for form fields. Include examples of expected formats for data entry when applicable."
+                "content": "<p>Provide clear labels and instructions for form fields. Include examples of expected formats for data entry when applicable.</p>"
               }
             ]
           }
@@ -136,15 +136,15 @@
             "subSections": [
               {
                 "title": "4.1.1 Valid Markup",
-                "content": "Use valid, well-formed HTML to ensure compatibility with current and future browsers, assistive technologies, and other user agents."
+                "content": "<p>Use valid, well-formed HTML to ensure compatibility with current and future browsers, assistive technologies, and other user agents.</p>"
               },
               {
                 "title": "4.1.2 Name, Role, Value",
-                "content": "Ensure that all interface components have appropriate names, roles, and values that can be programmatically determined by assistive technologies."
+                "content": "<p>Ensure that all interface components have appropriate names, roles, and values that can be programmatically determined by assistive technologies.</p>"
               },
               {
                 "title": "4.1.3 Status Messages",
-                "content": "Communicate status changes and dynamic content updates to assistive technologies without disrupting the user's current focus."
+                "content": "<p>Communicate status changes and dynamic content updates to assistive technologies without disrupting the user's current focus.</p>"
               }
             ]
           },
@@ -153,11 +153,11 @@
             "subSections": [
               {
                 "title": "4.2.1 Progressive Enhancement",
-                "content": "Build with a layered approach that provides a basic experience to all users, then enhances the experience for users with more capable browsers or devices."
+                "content": "<p>Build with a layered approach that provides a basic experience to all users, then enhances the experience for users with more capable browsers or devices.</p>"
               },
               {
                 "title": "4.2.2 Testing Across Platforms",
-                "content": "Test your content with different browsers, devices, and assistive technologies to ensure broad compatibility and accessibility."
+                "content": "<p>Test your content with different browsers, devices, and assistive technologies to ensure broad compatibility and accessibility.</p>"
               }
             ]
           }

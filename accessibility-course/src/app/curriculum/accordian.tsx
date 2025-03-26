@@ -53,7 +53,7 @@ const Accordion: React.FC<AccordionProps> = ({ subItem, onQuizComplete }) => {
             }}
           >
             <div className='panel-text'>
-              {section.content} {/* Render content dynamically */}
+              <div dangerouslySetInnerHTML={{ __html: section.content }} />
             </div>
           </div>
         </div>
